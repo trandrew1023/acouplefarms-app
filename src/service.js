@@ -151,3 +151,24 @@ export function saveLocation(locationDetails, organizationId) {
       return error.response;
     });
 }
+
+export function getOrgLocationColumns(organizationId) {
+  return axiosInstance.get(`organization/location-columns/${organizationId}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
+}
+
+export function saveLocationColumn(locationColumnDetails, organizationId) {
+  return axiosInstance.post('/organization/location-column', {
+    name: locationColumnDetails.name,
+    organizationId,
+  })
+    .then((response) => response)
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
+}

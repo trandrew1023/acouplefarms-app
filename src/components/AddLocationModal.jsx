@@ -38,6 +38,7 @@ export default function AddLocationModal({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '60%',
+    maxWidth: '300px',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -80,8 +81,8 @@ export default function AddLocationModal({
   };
 
   /**
-     * Handles 'Enter' keypress to submit form.
-     */
+   * Handles 'Enter' keypress to submit form.
+   */
   const handleKeypress = (e) => {
     if (e.which === 13) {
       e.preventDefault();
@@ -90,8 +91,8 @@ export default function AddLocationModal({
   };
 
   /**
-     * Renders message if any fields are invalid.
-     */
+   * Renders message if any fields are invalid.
+   */
   const invalidFieldsMessage = () => (
     <Typography variant="body1" color="red">
       Invalid fields
