@@ -1,6 +1,5 @@
 import {
   React,
-  Fragment,
   useEffect,
   useState,
 } from 'react';
@@ -58,13 +57,13 @@ export default function EditOrganization() {
         </Typography>
       </Grid>
       {(locations && locations.length > 0) ? (
-        locations.map((location) => (
-          <Fragment key={location.id}>
-            <Typography>{location.name}</Typography>
-            {addNewLocation()}
-            {editLocationColumns()}
-          </Fragment>
-        ))
+        <>
+          {locations.map((location) => (
+            <Typography key={location.id}>{location.name}</Typography>
+          ))}
+          {addNewLocation()}
+          {editLocationColumns()}
+        </>
       ) : (
         <>
           <Typography>
