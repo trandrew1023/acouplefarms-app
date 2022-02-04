@@ -105,6 +105,9 @@ export default function Locations() {
     if (value instanceof Map) {
       return Object.fromEntries(value.entries());
     }
+    if (key === 'id') {
+      return undefined;
+    }
     return value;
   };
 
