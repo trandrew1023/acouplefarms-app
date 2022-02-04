@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React } from 'react';
 import {
   Container,
   Grid,
@@ -10,12 +10,9 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
+import PropTypes from 'prop-types';
 
-export default function BasicDatePicker() {
-  const [state, setState] = useState({
-    value: new Date(),
-  });
-
+export default function BasicDatePicker({ date, changeDate }) {
   return (
     <Container component="main" maxWidth="xs" sx={{ mt: 2 }}>
       <Grid
@@ -28,10 +25,10 @@ export default function BasicDatePicker() {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
               label="Date"
-              value={state.value}
+              value={date.value}
               onChange={(newValue) => {
                 console.log(newValue);
-                setState({ value: newValue });
+                changeDate({ value: newValue });
               }}
               /* eslint-disable react/jsx-props-no-spreading */
               renderInput={(params) => <TextField {...params} />}
@@ -40,9 +37,9 @@ export default function BasicDatePicker() {
         </Grid>
         <Grid item xs={6}>
           <IconButton onClick={() => {
-            const newDate = new Date(state.value);
+            const newDate = new Date(date.value);
             newDate.setDate(newDate.getDate() - 1);
-            setState({ value: newDate });
+            changeDate({ value: newDate });
           }}
           >
             <ArrowBackIosIcon />
@@ -50,9 +47,9 @@ export default function BasicDatePicker() {
         </Grid>
         <Grid item xs={6}>
           <IconButton onClick={() => {
-            const newDate = new Date(state.value);
+            const newDate = new Date(date.value);
             newDate.setDate(newDate.getDate() + 1);
-            setState({ value: newDate });
+            changeDate({ value: newDate });
           }}
           >
             <ArrowForwardIosIcon />
@@ -62,3 +59,10 @@ export default function BasicDatePicker() {
     </Container>
   );
 }
+
+BasicDatePicker.propTypes = {
+  date: PropTypes.shape({
+    value: PropTypes.instanceOf(Date),
+  }).isRequired,
+  changeDate: PropTypes.func.isRequired,
+};

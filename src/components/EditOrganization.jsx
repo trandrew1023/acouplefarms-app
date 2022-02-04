@@ -24,7 +24,6 @@ export default function EditOrganization() {
   useEffect(async () => {
     const locationsResponse = await getOrgLocations(state.organization.id);
     setLocations(locationsResponse);
-    console.log(locationsResponse);
   }, []);
 
   const addNewLocation = () => (

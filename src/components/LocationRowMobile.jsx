@@ -8,32 +8,27 @@ import PropTypes from 'prop-types';
 
 export default function LocationRowMobile(props) {
   const {
-    columns, row, onRowSave,
+    columns, row, onRowChange,
   } = props;
-  const [rowDetails, setRowDetails] = useState({ data: new Map(row.data), editMode: row.editMode });
+
+  const getEmptyColumns = () => {
+    const columnIdToValue = new Map();
+    columns.map((column) => (
+      columnIdToValue.set(column.id.toString(), '')
+    ));
+    return columnIdToValue;
+  };
+
+  const [rowDetails, setRowDetails] = useState({
+    data: (row.locationColumnIdToValue && Object.keys(row.locationColumnIdToValue).length > 0)
+      ? new Map(Object.entries(row.locationColumnIdToValue))
+      : getEmptyColumns(),
+  });
 
   const editRowDetails = (id) => (event) => {
     rowDetails.data.set(id, event.target.value);
     setRowDetails({ ...rowDetails });
-  };
-
-  const handleRowEditChange = (save) => {
-    if (save) {
-      setRowDetails({ ...rowDetails, editMode: !rowDetails.editMode });
-    } else {
-      setRowDetails({ data: new Map(row.data), editMode: !rowDetails.editMode });
-    }
-  };
-
-  const handleRowSave = () => {
-    handleRowEditChange(true);
-    onRowSave({ ...row, data: new Map(rowDetails.data) }, row.id);
-  };
-
-  const handleKeypress = (e) => {
-    if (e.which === 13) {
-      handleRowSave();
-    }
+    onRowChange({ ...row, locationColumnIdToValue: rowDetails.data }, row.id);
   };
 
   return (
@@ -42,11 +37,11 @@ export default function LocationRowMobile(props) {
         variant="h4"
         align="center"
       >
-        {row.name}
+        {row.locationName}
       </Typography>
       {columns.map((column) => (
         <Grid
-          key={column.key}
+          key={column.id}
           container
           alignItems="center"
           justifyContent="center"
@@ -59,10 +54,10 @@ export default function LocationRowMobile(props) {
           </Grid>
           <Grid item xs={8}>
             <Input
+              placeholder="--"
               disableUnderline
-              onKeyPress={handleKeypress}
-              value={rowDetails.data.get(column.key)}
-              onChange={editRowDetails(column.key)}
+              value={rowDetails.data.get(column.id.toString())}
+              onChange={editRowDetails(column.id.toString())}
             />
           </Grid>
         </Grid>
@@ -73,18 +68,18 @@ export default function LocationRowMobile(props) {
 
 LocationRowMobile.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.number,
+    id: PropTypes.number,
     name: PropTypes.string,
   })).isRequired,
   row: PropTypes.shape({
     id: PropTypes.number,
-    name: PropTypes.string,
-    data: PropTypes.instanceOf(Map),
+    locationName: PropTypes.string,
+    locationColumnIdToValue: PropTypes.objectOf(PropTypes.string),
     history: PropTypes.arrayOf(PropTypes.shape({
       date: PropTypes.string,
       data: PropTypes.instanceOf(Map),
     })),
     editMode: PropTypes.bool,
   }).isRequired,
-  onRowSave: PropTypes.func.isRequired,
+  onRowChange: PropTypes.func.isRequired,
 };

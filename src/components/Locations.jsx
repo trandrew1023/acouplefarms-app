@@ -1,9 +1,10 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import SaveIcon from '@mui/icons-material/Save';
 import {
   Box,
   Button,
+  CircularProgress,
   Grid,
   IconButton,
   Modal,
@@ -15,58 +16,22 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import BasicDatePicker from './BasicDatePicker';
 import LocationTable from './LocationTable';
 import LocationTableMobile from './LocationTableMobile';
+import {
+  getOrgLocationColumns,
+  getOrgLocationStats,
+  saveOrganizationStats,
+} from '../service';
 
 export default function Locations() {
-  const [open, setOpen] = useState(false);
   const { state } = useLocation();
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [date, setDate] = useState({
+    value: new Date(),
+  });
   const navigate = useNavigate();
-  const createData = (name, a, b) => {
-    const mainData = new Map();
-    mainData.set(1, a);
-    mainData.set(2, b);
-    const historyData1 = new Map();
-    historyData1.set(1, a + 1);
-    historyData1.set(2, b + 1);
-    const historyData2 = new Map();
-    historyData2.set(1, a + 2);
-    historyData2.set(2, b + 2);
-
-    return ({
-      name,
-      data: mainData,
-      history: [
-        {
-          date: '2020-01-01',
-          data: historyData1,
-        },
-        {
-          date: '2020-01-02',
-          data: historyData2,
-        },
-      ],
-      editMode: false,
-    });
-  };
-
-  // temp data
-  const columns = [
-    {
-      key: 1,
-      name: 'Column A',
-    },
-    {
-      key: 2,
-      name: 'Column B',
-    },
-  ];
-
-  const rows = [
-    createData('Coop A', '1', '2'),
-    createData('Coop B', '3', '4'),
-    createData('Coop C', '5', '6'),
-    createData('Coop D', '7', '8'),
-    createData('Coop E', '9', '10'),
-  ];
+  const [orgLocationStats, setOrgLocationStats] = useState(null);
+  const [columns, setColumns] = useState(null);
 
   const theme = createTheme({
     palette: {
@@ -88,21 +53,84 @@ export default function Locations() {
     p: 4,
   };
 
+  const timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
+
+  const retrieveStats = async (statDate) => {
+    const newDate = (new Date(statDate.value - timezoneOffset)).toISOString().split('T')[0];
+    setIsLoading(true);
+    const orgLocationStatsResponse = await getOrgLocationStats(
+      state.organizationDetails.id,
+      newDate,
+    );
+    const orgLocationColumnsResponse = await getOrgLocationColumns(state.organizationDetails.id);
+    setOrgLocationStats(orgLocationStatsResponse);
+    setColumns(orgLocationColumnsResponse);
+    setIsLoading(false);
+  };
+
+  useEffect(async () => {
+    retrieveStats(date);
+  }, []);
+
+  const changeDate = async (newDate) => {
+    setDate(newDate);
+    retrieveStats(newDate);
+  };
+
   const getLocationtable = () => {
     if (window.innerWidth > 485) {
       return (
-        <LocationTable columns={columns} rows={rows} />
+        <LocationTable
+          columns={columns}
+          rows={orgLocationStats}
+          setOrgLocationStats={setOrgLocationStats}
+        />
       );
     }
-    return <LocationTableMobile columns={columns} rows={rows} />;
+    return (
+      <LocationTableMobile
+        columns={columns}
+        rows={orgLocationStats}
+        setOrgLocationStats={setOrgLocationStats}
+      />
+    );
   };
 
   const handleCancel = () => {
     setOpen(true);
   };
 
-  const handleSave = () => {
-    console.log('ON SAVE');
+  // https://stackoverflow.com/questions/29085197/how-do-you-json-stringify-an-es6-map
+  const replacer = (key, value) => {
+    if (value instanceof Map) {
+      return Object.fromEntries(value.entries());
+    }
+    return value;
+  };
+
+  const reviver = (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (value.dataType === 'Map') {
+        return new Map(value.value);
+      }
+    }
+    return value;
+  };
+
+  const handleSave = async () => {
+    const mappedReplacedString = JSON.stringify(orgLocationStats, replacer);
+    const formattedOrgLocationStats = JSON.parse(mappedReplacedString, reviver);
+    console.log([...formattedOrgLocationStats]);
+    const response = await saveOrganizationStats(
+      state.organizationDetails.id,
+      (new Date(date.value - timezoneOffset)).toISOString().split('T')[0],
+      [...formattedOrgLocationStats],
+    );
+    if (response.status === 200) {
+      console.log('SAVE SUCCESS');
+      return;
+    }
+    console.log('SAVE FAIL');
   };
 
   const cancelModal = () => (
@@ -152,10 +180,10 @@ export default function Locations() {
         <Typography variant="h3">{state.organizationDetails.name}</Typography>
       </Grid>
       <Grid item xs={12}>
-        <BasicDatePicker />
+        <BasicDatePicker date={date} changeDate={changeDate} />
       </Grid>
       <Grid item xs={12}>
-        {getLocationtable()}
+        {isLoading ? <CircularProgress /> : (columns && orgLocationStats && getLocationtable())}
       </Grid>
       <Grid item xs={12} sx={{ mt: 2 }}>
         <IconButton onClick={() => handleCancel()}>

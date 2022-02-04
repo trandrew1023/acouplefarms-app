@@ -25,6 +25,7 @@ axiosInstance.interceptors.request.use((config) => {
   if (tokens) {
     /* eslint-disable no-param-reassign */
     config.headers.Authorization = headerKey + tokens.access_token;
+    config.headers['Content-Type'] = 'application/json; charset=utf-8';
     return config;
   }
   return config;
@@ -169,6 +170,27 @@ export function saveLocationColumn(locationColumnDetails, organizationId) {
     .then((response) => response)
     .catch((error) => {
       console.log(error);
+      return error.response;
+    });
+}
+
+export function getOrgLocationStats(organizationId, date) {
+  return axiosInstance.get(`organization/location-stats/${organizationId}/${date}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
+}
+
+export function saveOrganizationStats(organizationId, date, locationStatsCriteria) {
+  return axiosInstance.post(`organization/location-stats/${organizationId}`, {
+    date,
+    locationStatsCriteria,
+  })
+    .then((response) => response)
+    .catch((error) => {
+      console.log(JSON.stringify(error));
       return error.response;
     });
 }

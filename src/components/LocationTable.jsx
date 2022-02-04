@@ -12,9 +12,11 @@ import PropTypes from 'prop-types';
 import LocationRow from './LocationRow';
 
 export default function LocationTable({ columns, rows }) {
-  const [editableRows, setEditableRows] = useState([...rows]);
+  const [editableRows, setEditableRows] = useState(rows ? [...rows] : null);
 
   useEffect(() => {
+    console.log('COLUMNS', columns);
+    console.log('ROWS', rows);
     setEditableRows(editableRows);
   });
 
@@ -38,11 +40,17 @@ export default function LocationTable({ columns, rows }) {
           <TableRow>
             <TableCell />
             <TableCell><Typography variant="h5">Location</Typography></TableCell>
-            {columns.map((column) => getColumnHeader(column.name))}
+            {(columns && columns.length > 0)
+              ? (columns.map((column) => getColumnHeader(column.name)))
+              : (
+                <Typography>
+                  No columns defined in this organization. Please add columns to the organization
+                </Typography>
+              )}
           </TableRow>
         </TableHead>
         <TableBody>
-          {editableRows.map((row, index) => (
+          {editableRows && editableRows.map((row, index) => (
             <LocationRow
               key={row.name}
               columns={columns}
@@ -60,7 +68,7 @@ LocationTable.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({
     key: PropTypes.number,
     name: PropTypes.string,
-  })).isRequired,
+  })),
   rows: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     data: PropTypes.instanceOf(Map),
@@ -69,5 +77,10 @@ LocationTable.propTypes = {
       data: PropTypes.instanceOf(Map),
     })),
     editMode: PropTypes.bool,
-  })).isRequired,
+  })),
+};
+
+LocationTable.defaultProps = {
+  columns: null,
+  rows: null,
 };

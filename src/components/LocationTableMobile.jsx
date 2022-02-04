@@ -1,21 +1,27 @@
-import { React, useState, useEffect } from 'react';
+import { React } from 'react';
 import {
-  Grid,
+  Grid, Typography,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import LocationRowMobile from './LocationRowMobile';
 
-export default function LocationTableMobile({ columns, rows }) {
-  const [editableRows, setEditableRows] = useState([...rows]);
-
-  useEffect(() => {
-    setEditableRows(editableRows);
-  });
-
-  const onRowSave = (row, rowId) => {
-    editableRows[rowId] = row;
-    setEditableRows([...editableRows]);
+export default function LocationTableMobile({ columns, rows, setOrgLocationStats }) {
+  const onRowChange = (row, rowId) => {
+    /* eslint-disable no-param-reassign */
+    rows[rowId] = row;
+    setOrgLocationStats(rows);
   };
+
+  const getRows = () => (
+    rows && rows.map((row, index) => (
+      <LocationRowMobile
+        key={row.locationStatId}
+        columns={columns}
+        row={Object.assign(row, { id: index })}
+        onRowChange={onRowChange}
+      />
+    ))
+  );
 
   return (
     <Grid
@@ -24,14 +30,13 @@ export default function LocationTableMobile({ columns, rows }) {
       alignItems="bottom"
       justifyContent="center"
     >
-      {editableRows.map((row, index) => (
-        <LocationRowMobile
-          key={row.name}
-          columns={columns}
-          row={Object.assign(row, { id: index })}
-          onRowSave={onRowSave}
-        />
-      ))}
+      {(columns && columns.length > 0)
+        ? getRows()
+        : (
+          <Typography>
+            No columns defined in this organization. Please add columns to the organization
+          </Typography>
+        )}
     </Grid>
   );
 }
@@ -40,7 +45,7 @@ LocationTableMobile.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({
     key: PropTypes.number,
     name: PropTypes.string,
-  })).isRequired,
+  })),
   rows: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     data: PropTypes.instanceOf(Map),
@@ -49,5 +54,11 @@ LocationTableMobile.propTypes = {
       data: PropTypes.instanceOf(Map),
     })),
     editMode: PropTypes.bool,
-  })).isRequired,
+  })),
+  setOrgLocationStats: PropTypes.func.isRequired,
+};
+
+LocationTableMobile.defaultProps = {
+  columns: null,
+  rows: null,
 };
