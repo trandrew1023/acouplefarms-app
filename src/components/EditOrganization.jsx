@@ -10,19 +10,29 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useLocation } from 'react-router-dom';
 import AddLocationModal from './AddLocationModal';
 import EditLocationColumnsModal from './EditLocationColumnsModal';
 import { getOrgLocations } from '../service';
+import UserOrgAssociationModal from './UserOrgAssociationModal';
 
 export default function EditOrganization() {
   const { state } = useLocation();
   const [locations, setLocations] = useState(null);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [locationColumnModalOpen, setLocationColumnModalOpen] = useState(false);
+  const [userOrgAssociationModalOpen, setUserOrgAssociationModalOpen] = useState(false);
+
+  const sortLocations = (locationsToSort) => (
+    locationsToSort.sort((a, b) => (
+      a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+    ))
+  );
 
   useEffect(async () => {
     const locationsResponse = await getOrgLocations(state.organization.id);
+    sortLocations(locationsResponse);
     setLocations(locationsResponse);
   }, []);
 
@@ -37,6 +47,13 @@ export default function EditOrganization() {
     <IconButton onClick={() => setLocationColumnModalOpen(true)}>
       <EditIcon fontSize="large" />
       Edit columns
+    </IconButton>
+  );
+
+  const editUsers = () => (
+    <IconButton onClick={() => setUserOrgAssociationModalOpen(true)}>
+      <PersonAddIcon fontSize="large" />
+      Edit users
     </IconButton>
   );
 
@@ -62,6 +79,7 @@ export default function EditOrganization() {
           ))}
           {addNewLocation()}
           {editLocationColumns()}
+          {editUsers()}
         </>
       ) : (
         <>
@@ -85,6 +103,13 @@ export default function EditOrganization() {
           organization={state.organization}
           locationColumnModalOpen
           setLocationColumnModalOpen={setLocationColumnModalOpen}
+        />
+      )}
+      {userOrgAssociationModalOpen && (
+        <UserOrgAssociationModal
+          organization={state.organization}
+          userOrgAssociationModalOpen={userOrgAssociationModalOpen}
+          setUserOrgAssociationModalOpen={setUserOrgAssociationModalOpen}
         />
       )}
     </Grid>

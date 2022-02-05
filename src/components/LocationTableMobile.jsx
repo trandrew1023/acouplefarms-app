@@ -5,8 +5,14 @@ import {
 import PropTypes from 'prop-types';
 import LocationRowMobile from './LocationRowMobile';
 
-export default function LocationTableMobile({ columns, rows, setOrgLocationStats }) {
+export default function LocationTableMobile({
+  columns,
+  rows,
+  setOrgLocationStats,
+  setSuccess,
+}) {
   const onRowChange = (row, rowId) => {
+    setSuccess(false);
     /* eslint-disable no-param-reassign */
     rows[rowId] = row;
     setOrgLocationStats(rows);
@@ -56,6 +62,7 @@ LocationTableMobile.propTypes = {
     editMode: PropTypes.bool,
   })),
   setOrgLocationStats: PropTypes.func.isRequired,
+  setSuccess: PropTypes.func.isRequired,
 };
 
 LocationTableMobile.defaultProps = {

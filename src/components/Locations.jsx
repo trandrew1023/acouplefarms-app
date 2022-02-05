@@ -1,16 +1,17 @@
 import { React, useEffect, useState } from 'react';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import CheckIcon from '@mui/icons-material/Check';
 import SaveIcon from '@mui/icons-material/Save';
 import {
   Box,
   Button,
   CircularProgress,
+  Fab,
   Grid,
-  IconButton,
   Modal,
   Typography,
 } from '@mui/material';
-import { red } from '@mui/material/colors';
+import { green, red } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 import BasicDatePicker from './BasicDatePicker';
@@ -26,6 +27,8 @@ export default function Locations() {
   const { state } = useLocation();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
   const [date, setDate] = useState({
     value: new Date(),
   });
@@ -53,7 +56,29 @@ export default function Locations() {
     p: 4,
   };
 
+  const buttonSx = {
+    ...(success && {
+      bgcolor: green[500],
+      '&:hover': {
+        bgcolor: green[700],
+      },
+    }),
+    ml: 5,
+  };
+
   const timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
+
+  const sortColumns = (columnsToSort) => (
+    columnsToSort.sort((a, b) => (
+      a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+    ))
+  );
+
+  const sortLocations = (locationsToSort) => (
+    locationsToSort.sort((a, b) => (
+      a.locationName.localeCompare(b.locationName, undefined, { numeric: true, sensitivity: 'base' })
+    ))
+  );
 
   const retrieveStats = async (statDate) => {
     const newDate = (new Date(statDate.value - timezoneOffset)).toISOString().split('T')[0];
@@ -63,6 +88,8 @@ export default function Locations() {
       newDate,
     );
     const orgLocationColumnsResponse = await getOrgLocationColumns(state.organizationDetails.id);
+    sortColumns(orgLocationColumnsResponse);
+    sortLocations(orgLocationStatsResponse);
     setOrgLocationStats(orgLocationStatsResponse);
     setColumns(orgLocationColumnsResponse);
     setIsLoading(false);
@@ -92,6 +119,7 @@ export default function Locations() {
         columns={columns}
         rows={orgLocationStats}
         setOrgLocationStats={setOrgLocationStats}
+        setSuccess={setSuccess}
       />
     );
   };
@@ -120,20 +148,27 @@ export default function Locations() {
     return value;
   };
 
+  const sleep = (ms) => (
+    // eslint-disable-next-line no-promise-executor-return
+    new Promise((resolve) => setTimeout(resolve, ms))
+  );
+
   const handleSave = async () => {
     const mappedReplacedString = JSON.stringify(orgLocationStats, replacer);
     const formattedOrgLocationStats = JSON.parse(mappedReplacedString, reviver);
-    console.log([...formattedOrgLocationStats]);
+    setSuccess(false);
+    setSaveLoading(true);
     const response = await saveOrganizationStats(
       state.organizationDetails.id,
       (new Date(date.value - timezoneOffset)).toISOString().split('T')[0],
       [...formattedOrgLocationStats],
     );
+    await sleep(500);
     if (response.status === 200) {
       console.log('SAVE SUCCESS');
-      return;
+      setSuccess(true);
     }
-    console.log('SAVE FAIL');
+    setSaveLoading(false);
   };
 
   const cancelModal = () => (
@@ -168,6 +203,93 @@ export default function Locations() {
     </Modal>
   );
 
+  const formButtons = () => (
+    <Grid
+      container
+      direction="row"
+      alignItems="center"
+      justifyContent="center"
+    >
+      {/* <Grid item xs={3}>
+        <Box>
+          <ThemeProvider theme={theme}>
+            <Button
+              size="small"
+              variant="contained"
+              disabled={saveLoading}
+              onClick={() => handleCancel()}
+              sx={{ mr: 5 }}
+            >
+              Cancel
+            </Button>
+          </ThemeProvider>
+        </Box>
+      </Grid> */}
+      <Grid item xs={6}>
+        <ThemeProvider theme={theme}>
+          <Fab
+            aria-label="cancel"
+            disabled={saveLoading}
+            onClick={() => handleCancel()}
+            color="primary"
+            sx={{ mr: 5 }}
+          >
+            <CancelPresentationIcon />
+          </Fab>
+        </ThemeProvider>
+      </Grid>
+      {/* <Grid item xs={3}>
+        <Box>
+          <Button
+            size="small"
+            variant="contained"
+            sx={buttonSx}
+            disabled={saveLoading}
+            onClick={() => handleSave()}
+          >
+            Save
+            {saveLoading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: green[500],
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: '-12px',
+                  marginLeft: '-12px',
+                }}
+              />
+            )}
+          </Button>
+        </Box>
+      </Grid> */}
+      <Grid item xs={6}>
+        <Fab
+          aria-label="save"
+          color="primary"
+          disabled={saveLoading}
+          sx={buttonSx}
+          onClick={() => handleSave()}
+        >
+          {success ? <CheckIcon /> : <SaveIcon />}
+          {saveLoading && (
+            <CircularProgress
+              size={68}
+              sx={{
+                color: green[500],
+                position: 'absolute',
+                top: -6,
+                left: -6,
+                zIndex: 1,
+              }}
+            />
+          )}
+        </Fab>
+      </Grid>
+    </Grid>
+  );
+
   return (
     <Grid
       container
@@ -189,14 +311,7 @@ export default function Locations() {
         {isLoading ? <CircularProgress /> : (columns && orgLocationStats && getLocationtable())}
       </Grid>
       <Grid item xs={12} sx={{ mt: 2 }}>
-        <IconButton onClick={() => handleCancel()}>
-          <Typography sx={{ mr: 1 }}>Cancel</Typography>
-          <CancelPresentationIcon sx={{ mr: 3 }} />
-        </IconButton>
-        <IconButton onClick={() => handleSave()}>
-          <Typography sx={{ mr: 1 }}>Save</Typography>
-          <SaveIcon />
-        </IconButton>
+        {formButtons()}
       </Grid>
       {open && cancelModal()}
     </Grid>

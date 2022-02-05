@@ -27,7 +27,6 @@ export default function BasicDatePicker({ date, changeDate }) {
               label="Date"
               value={date.value}
               onChange={(newValue) => {
-                console.log(newValue);
                 changeDate({ value: newValue });
               }}
               /* eslint-disable react/jsx-props-no-spreading */

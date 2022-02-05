@@ -22,12 +22,19 @@ export default function Organizations() {
   const [hasErrors, setHasErrors] = useState(false);
   const navigate = useNavigate();
 
+  const sortOrgs = (organizationsToSort) => (
+    organizationsToSort.sort((a, b) => (
+      a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+    ))
+  );
+
   useEffect(async () => {
     setIsLoading(true);
     setHasErrors(false);
     const organizationsResponse = await getUserOrganizations();
     setIsLoading(false);
     if (organizationsResponse || organizationsResponse.status === 200) {
+      sortOrgs(organizationsResponse.data);
       setOrganizations(organizationsResponse.data);
       return;
     }

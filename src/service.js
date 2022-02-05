@@ -194,3 +194,24 @@ export function saveOrganizationStats(organizationId, date, locationStatsCriteri
       return error.response;
     });
 }
+
+export function getOrgUsers(organizationId) {
+  return axiosInstance.get(`organization/users/${organizationId}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
+}
+
+export function saveOrgUsers(organizationId, userOrgCriteria) {
+  return axiosInstance.post(`organization/users/${organizationId}`, {
+    organizationId,
+    userOrgCriteria,
+  })
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
+}

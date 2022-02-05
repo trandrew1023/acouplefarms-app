@@ -27,8 +27,15 @@ export default function EditLocationColumnsModal({
   const [nameTaken, setNameTaken] = useState(false);
   const [errors, setErrors] = useState(null);
 
+  const sortColumns = (columnsToSort) => (
+    columnsToSort.sort((a, b) => (
+      a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+    ))
+  );
+
   useEffect(async () => {
     const locationColumnsResponse = await getOrgLocationColumns(organization.id);
+    sortColumns(locationColumnsResponse);
     setLocationColumns(locationColumnsResponse);
     console.log(locationColumnsResponse);
   }, []);
