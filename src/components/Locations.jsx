@@ -209,6 +209,7 @@ export default function Locations() {
       direction="row"
       alignItems="center"
       justifyContent="center"
+      sx={{ mb: 3 }}
     >
       {/* <Grid item xs={3}>
         <Box>
