@@ -5,63 +5,42 @@ import {
   IconButton,
   Input,
   Table,
-  TableBody,
+  // TableBody,
   TableCell,
   TableHead,
   TableRow,
   Typography,
 } from '@mui/material';
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import SaveIcon from '@mui/icons-material/Save';
 import PropTypes from 'prop-types';
 
 export default function LocationRow(props) {
   const {
-    columns, row, onRowSave,
+    columns, row, onRowChange,
   } = props;
-  const [rowDetails, setRowDetails] = useState({ data: new Map(row.data), editMode: row.editMode });
+
+  const getEmptyColumns = () => {
+    const columnIdToValue = new Map();
+    columns.map((column) => (
+      columnIdToValue.set(column.id.toString(), '')
+    ));
+    return columnIdToValue;
+  };
+
+  const [rowDetails, setRowDetails] = useState({
+    data: (row.locationColumnIdToValue && Object.keys(row.locationColumnIdToValue).length > 0)
+      ? new Map(Object.entries(row.locationColumnIdToValue))
+      : getEmptyColumns(),
+  });
+
   const [open, setOpen] = useState(false);
 
   const editRowDetails = (id) => (event) => {
     rowDetails.data.set(id, event.target.value);
     setRowDetails({ ...rowDetails });
+    onRowChange({ ...row, locationColumnIdToValue: rowDetails.data }, row.id);
   };
-
-  const handleRowEditChange = (save) => {
-    if (save) {
-      setRowDetails({ ...rowDetails, editMode: !rowDetails.editMode });
-    } else {
-      setRowDetails({ data: new Map(row.data), editMode: !rowDetails.editMode });
-    }
-  };
-
-  const handleRowSave = () => {
-    handleRowEditChange(true);
-    onRowSave({ ...row, data: new Map(rowDetails.data) }, row.id);
-  };
-
-  const handleRowCancel = () => {
-    handleRowEditChange(false);
-  };
-
-  const handleKeypress = (e) => {
-    if (e.which === 13) {
-      handleRowSave();
-    }
-  };
-
-  const getRowDetails = (columnKey) => (
-    <TableCell key={columnKey}>
-      <Input
-        onKeyPress={handleKeypress}
-        value={rowDetails.data.get(columnKey)}
-        onChange={editRowDetails(columnKey)}
-      />
-    </TableCell>
-  );
 
   return (
     <>
@@ -75,57 +54,19 @@ export default function LocationRow(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        {rowDetails.editMode ? (
-          <>
-            <TableCell>
-              <Typography>
-                {row.name}
-              </Typography>
-            </TableCell>
-            {columns.map((column) => getRowDetails(column.key))}
-          </>
-        )
-          : (
-            <>
-              <TableCell>
-                <Typography>{row.name}</Typography>
-              </TableCell>
-              {columns.map((column) => (
-                <TableCell key={column.key}>
-                  <Typography>
-                    {row.data.get(column.key)}
-                  </Typography>
-                </TableCell>
-              ))}
-            </>
-          )}
         <TableCell>
-          {rowDetails.editMode
-            ? (
-              <>
-                <IconButton
-                  aria-label="save"
-                  onClick={() => handleRowSave()}
-                >
-                  <SaveIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="cancel"
-                  onClick={() => handleRowCancel()}
-                >
-                  <CancelPresentationIcon />
-                </IconButton>
-              </>
-            )
-            : (
-              <IconButton
-                aria-label="edit"
-                onClick={() => handleRowEditChange(false)}
-              >
-                <ModeEditIcon />
-              </IconButton>
-            )}
+          <Typography>{row.locationName}</Typography>
         </TableCell>
+        {columns.map((column) => (
+          <TableCell key={column.id}>
+            <Input
+              placeholder="--"
+              disableUnderline
+              value={rowDetails.data.get(column.id.toString())}
+              onChange={editRowDetails(column.id.toString())}
+            />
+          </TableCell>
+        ))}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 5, paddingTop: 5 }} colSpan={5.5}>
@@ -140,7 +81,7 @@ export default function LocationRow(props) {
                     <TableCell />
                     <TableCell>Date</TableCell>
                     {columns.map((column) => (
-                      <TableCell key={column.key}>
+                      <TableCell key={column.id}>
                         <Typography>
                           {column.name}
                         </Typography>
@@ -148,7 +89,7 @@ export default function LocationRow(props) {
                     ))}
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                {/* <TableBody>
                   {row.history.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell />
@@ -162,7 +103,7 @@ export default function LocationRow(props) {
                       ))}
                     </TableRow>
                   ))}
-                </TableBody>
+                </TableBody> */}
               </Table>
             </Box>
           </Collapse>
@@ -179,13 +120,12 @@ LocationRow.propTypes = {
   })).isRequired,
   row: PropTypes.shape({
     id: PropTypes.number,
-    name: PropTypes.string,
-    data: PropTypes.instanceOf(Map),
+    locationName: PropTypes.string,
+    locationColumnIdToValue: PropTypes.objectOf(PropTypes.string),
     history: PropTypes.arrayOf(PropTypes.shape({
       date: PropTypes.string,
       data: PropTypes.instanceOf(Map),
     })),
-    editMode: PropTypes.bool,
   }).isRequired,
-  onRowSave: PropTypes.func.isRequired,
+  onRowChange: PropTypes.func.isRequired,
 };

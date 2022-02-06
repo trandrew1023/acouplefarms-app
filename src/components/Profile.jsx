@@ -1,8 +1,12 @@
-import React from 'react';
+import { React, useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
 export default function Profile({ userDetails }) {
+  useEffect(() => {
+    document.title = 'Profile - aCOUPlefarms';
+  }, []);
+
   return (
     userDetails ? (
       <Container maxWidth="sm" sx={{ mt: 5 }}>

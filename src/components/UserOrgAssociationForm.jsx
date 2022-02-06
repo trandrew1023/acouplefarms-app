@@ -7,16 +7,16 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SearchIcon from '@mui/icons-material/Search';
 import PropTypes from 'prop-types';
 import { searchUsersByUsername } from '../service';
 
-export default function UserOrgAssociationForm({ orgFormDetails, setOrgFormDetails }) {
+export default function UserOrgAssociationForm({
+  orgFormDetails,
+  setOrgFormDetails,
+}) {
   const [searchKey, setSearchKey] = useState('');
-  const [users, setUsers] = useState({
-    searchUsers: [],
-    selectedUsers: orgFormDetails.selectedUsers,
-  });
   const [errors, setErrors] = useState(null);
   const handleFormChange = (event) => {
     setSearchKey(event.target.value);
@@ -24,36 +24,55 @@ export default function UserOrgAssociationForm({ orgFormDetails, setOrgFormDetai
 
   const handleSearch = async () => {
     setErrors(null);
+    if (searchKey.length < 1) {
+      setErrors({ invalidSearchKey: true });
+      return;
+    }
     const response = await searchUsersByUsername(searchKey);
     if (response && response.status === 200) {
       const usersResponse = response.data;
+      setSearchKey('');
       if (usersResponse.length === 0) {
-        setUsers({ ...users, searchUsers: [] });
+        setOrgFormDetails({ ...orgFormDetails, searchUsers: [] });
         setErrors({ ...errors, noUsersFound: true });
       } else {
-        setUsers({ ...users, searchUsers: [...usersResponse] });
+        setOrgFormDetails({ ...orgFormDetails, searchUsers: [...usersResponse] });
       }
     }
   };
 
+  const noUsersFoundMessage = () => (
+    <Typography sx={{ color: 'red' }}>
+      No users found
+    </Typography>
+  );
+
+  const noSearchKeyMessage = () => (
+    <Typography sx={{ color: 'red' }}>
+      Please enter a name to search
+    </Typography>
+  );
+
   const handleKeypress = (e) => {
     if (e.which === 13) {
+      e.preventDefault();
       handleSearch();
     }
   };
 
   const handleUserSelect = (selectedUser) => {
     if (selectedUser.id === orgFormDetails.user.id) return;
-    const selectedUserIndex = users.selectedUsers.map((user) => user.id).indexOf(selectedUser.id);
+    const selectedUserIndex = orgFormDetails.selectedUsers.map(
+      (user) => user.id,
+    ).indexOf(selectedUser.id);
     let newSelectedUsers = null;
     if (selectedUserIndex === -1) {
-      newSelectedUsers = [...users.selectedUsers, selectedUser];
+      newSelectedUsers = [...orgFormDetails.selectedUsers, selectedUser];
     } else {
-      newSelectedUsers = users.selectedUsers;
+      newSelectedUsers = orgFormDetails.selectedUsers;
       newSelectedUsers.splice(selectedUserIndex, 1);
     }
     setOrgFormDetails({ ...orgFormDetails, selectedUsers: newSelectedUsers });
-    setUsers({ ...users, selectedUsers: newSelectedUsers });
   };
 
   return (
@@ -62,23 +81,33 @@ export default function UserOrgAssociationForm({ orgFormDetails, setOrgFormDetai
         Add additional users
       </Typography>
       <TextField
+        value={searchKey}
         onChange={handleFormChange}
         onKeyPress={handleKeypress}
+        placeholder="Search usernames"
+        sx={{ width: '100%' }}
         InputProps={{
           endAdornment: (
-            <IconButton onClick={handleSearch}>
-              <SearchIcon />
-            </IconButton>
+            <>
+              {searchKey.length > 0
+                && (
+                  <IconButton onClick={() => setSearchKey('')}>
+                    <HighlightOffIcon />
+                  </IconButton>
+                )}
+              <IconButton onClick={handleSearch}>
+                <SearchIcon />
+              </IconButton>
+            </>
           ),
         }}
       />
       {errors
         && errors.noUsersFound
-        && (
-          <Typography variant="body1" color="red">
-            No users found
-          </Typography>
-        )}
+        && noUsersFoundMessage()}
+      {errors
+        && errors.invalidSearchKey
+        && noSearchKeyMessage()}
       <>
         <Typography sx={{ mt: 1 }}>Users</Typography>
         <Box sx={{
@@ -89,8 +118,8 @@ export default function UserOrgAssociationForm({ orgFormDetails, setOrgFormDetai
           width: '100%',
         }}
         >
-          {(users.searchUsers && users.searchUsers.length > 0)
-            ? users.searchUsers.map((selectedUser) => (
+          {(orgFormDetails.searchUsers && orgFormDetails.searchUsers.length > 0)
+            ? orgFormDetails.searchUsers.map((selectedUser) => (
               <Card
                 key={selectedUser.id}
                 onClick={() => handleUserSelect(selectedUser)}
@@ -99,7 +128,7 @@ export default function UserOrgAssociationForm({ orgFormDetails, setOrgFormDetai
                 <Checkbox
                   inputProps={{ 'aria-label': 'controlled' }}
                   checked={
-                    users.selectedUsers.map((user) => user.id)
+                    orgFormDetails.selectedUsers.map((user) => user.id)
                       .indexOf(selectedUser.id) >= 0
                   }
                 />
@@ -125,8 +154,8 @@ export default function UserOrgAssociationForm({ orgFormDetails, setOrgFormDetai
           width: '100%',
         }}
         >
-          {(users.selectedUsers && users.selectedUsers.length > 0)
-            ? users.selectedUsers.map((selectedUser) => (
+          {(orgFormDetails.selectedUsers && orgFormDetails.selectedUsers.length > 0)
+            ? orgFormDetails.selectedUsers.map((selectedUser) => (
               <Card
                 key={selectedUser.id}
                 onClick={() => handleUserSelect(selectedUser)}
@@ -134,7 +163,7 @@ export default function UserOrgAssociationForm({ orgFormDetails, setOrgFormDetai
               >
                 <Checkbox
                   inputProps={{ 'aria-label': 'controlled' }}
-                  checked={users.selectedUsers.indexOf(selectedUser) >= 0}
+                  checked={orgFormDetails.selectedUsers.indexOf(selectedUser) >= 0}
                 />
                 <Typography variant="button" sx={{ ml: 1 }}>
                   {selectedUser.username}
@@ -157,6 +186,15 @@ UserOrgAssociationForm.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     phoneNumber: PropTypes.string,
+    searchUsers: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        firstname: PropTypes.string,
+        lastmane: PropTypes.string,
+        email: PropTypes.string,
+        username: PropTypes.string,
+      }),
+    ),
     selectedUsers: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number,

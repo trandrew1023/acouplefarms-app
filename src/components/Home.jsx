@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useEffect } from 'react';
 import {
   Button,
   Grid,
@@ -9,6 +9,10 @@ import coop from '../images/chicken-coop.png';
 
 export default function Home() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = 'aCOUPlefarms';
+  });
 
   return (
     <Grid
@@ -37,6 +41,7 @@ export default function Home() {
           position="fixed"
           variant="contained"
           onClick={() => navigate('/register')}
+          sx={{ mb: 3 }}
         >
           Sign Up
         </Button>

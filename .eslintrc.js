@@ -18,5 +18,8 @@ module.exports = {
     'react',
   ],
   rules: {
+    "indent": "off",
+    "react/jsx-indent": "off",
+    "react/jsx-indent-props": "off",
   },
 };

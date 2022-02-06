@@ -2,11 +2,13 @@ import { React, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  CircularProgress,
   Grid,
   Modal,
   Typography,
 } from '@mui/material';
-import { red } from '@mui/material/colors';
+import CheckIcon from '@mui/icons-material/Check';
+import { green, red } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { getOrgUsers, getUser, saveOrgUsers } from '../service';
@@ -18,6 +20,18 @@ export default function UserOrgAssociationModal({
   setUserOrgAssociationModalOpen,
 }) {
   const [orgFormDetails, setOrgFormDetails] = useState(null);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const buttonSx = {
+    ...(success && {
+      bgcolor: green[500],
+      '&:hover': {
+        bgcolor: green[700],
+      },
+    }),
+    width: '30%',
+  };
 
   useEffect(async () => {
     const orgUsers = await getOrgUsers(organization.id);
@@ -26,6 +40,7 @@ export default function UserOrgAssociationModal({
       name: organization.name,
       email: organization.email,
       phoneNumber: organization.phoneNumber,
+      searchUsers: [],
       selectedUsers: orgUsers,
       user,
     });
@@ -39,7 +54,7 @@ export default function UserOrgAssociationModal({
     width: '60%',
     maxWidth: '300px',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: '1px solid #000',
     boxShadow: 24,
     p: 4,
   };
@@ -52,18 +67,33 @@ export default function UserOrgAssociationModal({
     },
   });
 
+  const sleep = (ms) => (
+    // eslint-disable-next-line no-promise-executor-return
+    new Promise((resolve) => setTimeout(resolve, ms))
+  );
+
   /**
    * Handles form submission.
    */
   const handleSubmit = async () => {
-    const response = await saveOrgUsers(organization.id, orgFormDetails.selectedUsers);
+    setSaveLoading(true);
+    setSuccess(false);
+    const userIds = orgFormDetails.selectedUsers.map((selectedUser) => selectedUser.id);
+    const response = await saveOrgUsers(
+      organization.id,
+      userIds,
+    );
+    await sleep(500);
     if (response.status === 204) {
-      console.log('PASS');
+      const orgUsers = await getOrgUsers(organization.id);
+      setOrgFormDetails({ ...orgFormDetails, searchUsers: [], users: orgUsers });
+      setSuccess(true);
     } else if (response.status === 400) {
       console.log('400');
     } else if (response.status === 409) {
       console.log('409');
     }
+    setSaveLoading(false);
   };
 
   return (
@@ -88,15 +118,36 @@ export default function UserOrgAssociationModal({
             <ThemeProvider theme={theme}>
               <Button
                 variant="contained"
+                color="primary"
+                disabled={saveLoading}
                 onClick={() => setUserOrgAssociationModalOpen(false)}
-                sx={{ mr: 1 }}
+                sx={{ mr: 1, width: '30%' }}
               >
-                <Typography>Cancel</Typography>
+                <Typography>{success ? 'Done' : 'Cancel'}</Typography>
               </Button>
             </ThemeProvider>
-            <Button variant="contained" onClick={() => handleSubmit()}>
-              <Typography>Submit</Typography>
+            <Button
+              aria-label="save"
+              color="primary"
+              variant="contained"
+              disabled={saveLoading}
+              sx={buttonSx}
+              onClick={() => handleSubmit()}
+            >
+              {success ? <CheckIcon /> : <Typography>Submit</Typography>}
+              {saveLoading && (
+                <CircularProgress
+                  size={30}
+                  sx={{
+                    color: green[500],
+                    position: 'absolute',
+                  }}
+                />
+              )}
             </Button>
+            {/* <Button variant="contained" onClick={() => handleSubmit()}>
+              <Typography>Submit</Typography>
+            </Button> */}
           </Box>
         </Grid>
       </Box>

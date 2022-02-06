@@ -1,11 +1,12 @@
 import {
+  Fragment,
   React,
   useEffect,
   useState,
 } from 'react';
 import {
+  Button,
   Grid,
-  IconButton,
   Typography,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -14,8 +15,8 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useLocation } from 'react-router-dom';
 import AddLocationModal from './AddLocationModal';
 import EditLocationColumnsModal from './EditLocationColumnsModal';
-import { getOrgLocations } from '../service';
 import UserOrgAssociationModal from './UserOrgAssociationModal';
+import { getOrgLocations } from '../service';
 
 export default function EditOrganization() {
   const { state } = useLocation();
@@ -31,30 +32,60 @@ export default function EditOrganization() {
   );
 
   useEffect(async () => {
+    document.title = `Edit - ${state.organization.name} - aCOUPlefarms`;
     const locationsResponse = await getOrgLocations(state.organization.id);
     sortLocations(locationsResponse);
     setLocations(locationsResponse);
   }, []);
 
+  const renderLocations = (location) => (
+    <Grid item xs={12}>
+      <Typography
+        variant="h5"
+        key={location.id}
+      >
+        {location.name}
+      </Typography>
+    </Grid>
+  );
+
   const addNewLocation = () => (
-    <IconButton onClick={() => setLocationModalOpen(true)}>
-      <AddCircleOutlineIcon fontSize="large" />
-      Add location
-    </IconButton>
+    <Button
+      startIcon={<AddCircleOutlineIcon />}
+      variant="contained"
+      onClick={() => setLocationModalOpen(true)}
+      sx={{ width: '60%', mt: 1 }}
+    >
+      <Typography variant="button">
+        Add location
+      </Typography>
+    </Button>
   );
 
   const editLocationColumns = () => (
-    <IconButton onClick={() => setLocationColumnModalOpen(true)}>
-      <EditIcon fontSize="large" />
-      Edit columns
-    </IconButton>
+    <Button
+      startIcon={<EditIcon />}
+      variant="contained"
+      onClick={() => setLocationColumnModalOpen(true)}
+      sx={{ width: '60%' }}
+    >
+      <Typography variant="button">
+        Edit columns
+      </Typography>
+    </Button>
   );
 
   const editUsers = () => (
-    <IconButton onClick={() => setUserOrgAssociationModalOpen(true)}>
-      <PersonAddIcon fontSize="large" />
-      Edit users
-    </IconButton>
+    <Button
+      startIcon={<PersonAddIcon />}
+      variant="contained"
+      onClick={() => setUserOrgAssociationModalOpen(true)}
+      sx={{ width: '60%' }}
+    >
+      <Typography variant="button">
+        Edit users
+      </Typography>
+    </Button>
   );
 
   return (
@@ -72,23 +103,38 @@ export default function EditOrganization() {
           {state.organization.name}
         </Typography>
       </Grid>
-      {(locations && locations.length > 0) ? (
-        <>
-          {locations.map((location) => (
-            <Typography key={location.id}>{location.name}</Typography>
-          ))}
-          {addNewLocation()}
-          {editLocationColumns()}
-          {editUsers()}
-        </>
-      ) : (
-        <>
-          <Typography>
-            This organization has no locations. Add a location to get started.
-          </Typography>
-          {addNewLocation()}
-        </>
-      )}
+      <Grid item>
+        {(locations && locations.length > 0) ? (
+          <>
+            <Grid container sx={{ mt: 2 }}>
+              {locations.map((location) => (
+                <Fragment key={location.id}>
+                  {renderLocations(location)}
+                </Fragment>
+              ))}
+              {addNewLocation()}
+            </Grid>
+            <Grid
+              container
+              sx={{ mt: 2 }}
+            >
+              <Grid item xs={12}>
+                {editLocationColumns()}
+              </Grid>
+              <Grid item xs={12} sx={{ mt: 2 }}>
+                {editUsers()}
+              </Grid>
+            </Grid>
+          </>
+        ) : (
+          <>
+            <Typography>
+              This organization has no locations. Add a location to get started.
+            </Typography>
+            {addNewLocation()}
+          </>
+        )}
+      </Grid>
       {locationModalOpen
         && (
           <AddLocationModal

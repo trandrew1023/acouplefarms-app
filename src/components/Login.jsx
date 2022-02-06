@@ -1,16 +1,22 @@
-import { React, useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import { React, useEffect, useState } from 'react';
+import {
+  Avatar,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Link,
+  TextField,
+  Typography,
+} from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
-import { Link, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import PropTypes from 'prop-types';
 import { login } from '../service';
 import logo from '../images/hen.png';
@@ -23,11 +29,16 @@ export default function Login({ setTokens }) {
   const [hasUsernameError, setUsernameError] = useState(false);
   const [hasPasswordError, setPasswordError] = useState(false);
   const [hasSubmitError, setSubmitError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const theme = createTheme();
   const handleFormChange = (prop) => (event) => {
     setLoginDetails({ ...loginDetails, [prop]: event.target.value });
   };
+
+  useEffect(() => {
+    document.title = 'Login - aCOUPlefarms';
+  });
 
   const copyright = () => (
     <Typography sx={{ mt: 6 }} variant="body2" color="text.secondary" align="center">
@@ -40,6 +51,14 @@ export default function Login({ setTokens }) {
       .
     </Typography>
   );
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const hasErrors = () => {
     let hasError = false;
@@ -120,12 +139,23 @@ export default function Login({ setTokens }) {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
               error={hasPasswordError}
               onChange={handleFormChange('password')}
               onKeyPress={handleKeypress}
+              InputProps={{
+                endAdornment:
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>,
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

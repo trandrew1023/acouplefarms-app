@@ -25,6 +25,7 @@ export default function NewOrganization() {
     name: '',
     email: '',
     phoneNumber: '',
+    searchUsers: [],
     selectedUsers: [],
     user: null,
   });
@@ -33,6 +34,7 @@ export default function NewOrganization() {
   const navigate = useNavigate();
 
   useEffect(async () => {
+    document.title = 'Add New Organization - aCOUPlefarms';
     if (!orgFormDetails.user) {
       const currentUser = await getUser();
       setOrgFormDetails((orgFormDetailsState) => (

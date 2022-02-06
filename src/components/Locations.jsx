@@ -49,11 +49,12 @@ export default function Locations() {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '60%',
+    width: window.innerWidth > 485 ? '300px' : '60%',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    textAlign: 'center',
   };
 
   const buttonSx = {
@@ -81,8 +82,9 @@ export default function Locations() {
   );
 
   const retrieveStats = async (statDate) => {
-    const newDate = (new Date(statDate.value - timezoneOffset)).toISOString().split('T')[0];
+    setSuccess(false);
     setIsLoading(true);
+    const newDate = (new Date(statDate.value - timezoneOffset)).toISOString().split('T')[0];
     const orgLocationStatsResponse = await getOrgLocationStats(
       state.organizationDetails.id,
       newDate,
@@ -96,6 +98,7 @@ export default function Locations() {
   };
 
   useEffect(async () => {
+    document.title = `${state.organizationDetails.name} - aCOUPlefarms`;
     retrieveStats(date);
   }, []);
 
@@ -111,6 +114,7 @@ export default function Locations() {
           columns={columns}
           rows={orgLocationStats}
           setOrgLocationStats={setOrgLocationStats}
+          setSuccess={setSuccess}
         />
       );
     }
@@ -165,7 +169,6 @@ export default function Locations() {
     );
     await sleep(500);
     if (response.status === 200) {
-      console.log('SAVE SUCCESS');
       setSuccess(true);
     }
     setSaveLoading(false);

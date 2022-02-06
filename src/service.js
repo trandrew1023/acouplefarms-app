@@ -133,7 +133,7 @@ export function searchUsersByUsername(username) {
 }
 
 export function getOrgLocations(organizationId) {
-  return axiosInstance.get(`organization/locations/${organizationId}`)
+  return axiosInstance.get(`organization/${organizationId}/locations`)
     .then((response) => response.data)
     .catch((error) => {
       console.log(error);
@@ -154,7 +154,7 @@ export function saveLocation(locationDetails, organizationId) {
 }
 
 export function getOrgLocationColumns(organizationId) {
-  return axiosInstance.get(`organization/location-columns/${organizationId}`)
+  return axiosInstance.get(`organization/${organizationId}/location-columns`)
     .then((response) => response.data)
     .catch((error) => {
       console.log(error);
@@ -175,7 +175,7 @@ export function saveLocationColumn(locationColumnDetails, organizationId) {
 }
 
 export function getOrgLocationStats(organizationId, date) {
-  return axiosInstance.get(`organization/location-stats/${organizationId}/${date}`)
+  return axiosInstance.get(`organization/${organizationId}/location-stats/${date}`)
     .then((response) => response.data)
     .catch((error) => {
       console.log(error);
@@ -184,7 +184,7 @@ export function getOrgLocationStats(organizationId, date) {
 }
 
 export function saveOrganizationStats(organizationId, date, locationStatsCriteria) {
-  return axiosInstance.post(`organization/location-stats/${organizationId}`, {
+  return axiosInstance.post(`organization/${organizationId}/location-stats`, {
     date,
     locationStatsCriteria,
   })
@@ -196,7 +196,7 @@ export function saveOrganizationStats(organizationId, date, locationStatsCriteri
 }
 
 export function getOrgUsers(organizationId) {
-  return axiosInstance.get(`organization/users/${organizationId}`)
+  return axiosInstance.get(`organization/${organizationId}/users`)
     .then((response) => response.data)
     .catch((error) => {
       console.log(error);
@@ -204,12 +204,14 @@ export function getOrgUsers(organizationId) {
     });
 }
 
-export function saveOrgUsers(organizationId, userOrgCriteria) {
-  return axiosInstance.post(`organization/users/${organizationId}`, {
+export function saveOrgUsers(organizationId, userIds) {
+  console.log(organizationId);
+  console.log(userIds);
+  return axiosInstance.post('organization/users', {
     organizationId,
-    userOrgCriteria,
+    userIds,
   })
-    .then((response) => response.data)
+    .then((response) => response)
     .catch((error) => {
       console.log(error);
       return error.response;

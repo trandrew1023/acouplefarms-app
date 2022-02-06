@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -6,11 +6,14 @@ import {
   Container,
   CssBaseline,
   Grid,
+  IconButton,
   Link,
   TextField,
   Typography,
 
 } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import EmailValidator from 'email-validator';
 import { register } from '../service';
@@ -31,7 +34,12 @@ export default function SignUp() {
   const [usernameTaken, setUsernameTaken] = useState(false);
   const [emailTaken, setEmailTaken] = useState(false);
   const [submitSucceeded, setSubmitSucceeded] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const theme = createTheme();
+
+  useEffect(() => {
+    document.title = 'Register - aCOUPlefarms';
+  }, []);
 
   const clearErrors = () => {
     setErrors(null);
@@ -105,6 +113,14 @@ export default function SignUp() {
         setEmailTaken(true);
       }
     }
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   /**
@@ -258,13 +274,24 @@ export default function SignUp() {
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   value={userDetails.password}
                   autoComplete="new-password"
                   error={errors && errors.password}
                   onChange={handleFormChange('password')}
                   onKeyPress={handleKeypress}
+                  InputProps={{
+                    endAdornment:
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>,
+                  }}
                 />
               </Grid>
             </Grid>

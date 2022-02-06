@@ -29,6 +29,7 @@ export default function Organizations() {
   );
 
   useEffect(async () => {
+    document.title = 'Organizations - aCOUPlefarms';
     setIsLoading(true);
     setHasErrors(false);
     const organizationsResponse = await getUserOrganizations();

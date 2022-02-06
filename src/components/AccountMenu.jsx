@@ -34,14 +34,37 @@ export default function AccountMenu({ setTokens, userDetails }) {
     navigate('/');
   };
 
+  const stringToColor = (string) => {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.substr(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+  };
+
   const getUserIcon = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
       <Tooltip title="Account settings">
         <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
           <Avatar
-            sx={{ width: 40, height: 40 }}
+            sx={{ width: 40, height: 40, bgcolor: stringToColor(userDetails.username) }}
           >
-            {userDetails && userDetails.username.charAt(0).toUpperCase()}
+            <Typography>
+              {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
+              {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
+            </Typography>
           </Avatar>
         </IconButton>
       </Tooltip>
@@ -52,7 +75,12 @@ export default function AccountMenu({ setTokens, userDetails }) {
     if (userDetails) {
       return (
         <>
-          <Avatar>{userDetails.username.charAt(0).toUpperCase()}</Avatar>
+          <Avatar
+            sx={{ bgcolor: stringToColor(userDetails.username) }}
+          >
+            {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
+            {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
+          </Avatar>
           <Typography variant="h5" color="black" align="center">
             {userDetails.username}
           </Typography>

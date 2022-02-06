@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, Fragment, useState } from 'react';
 import {
   Grid,
   Input,
@@ -13,7 +13,7 @@ export default function LocationRowMobile(props) {
 
   const getEmptyColumns = () => {
     const columnIdToValue = new Map();
-    columns.map((column) => (
+    columns.foreach((column) => (
       columnIdToValue.set(column.id.toString(), '')
     ));
     return columnIdToValue;

@@ -122,12 +122,12 @@ export default function EditLocationColumnsModal({
   );
 
   /**
-   * Renders message if the name is already being used for this org.
+   * Renders message if the column is already being used for this org.
    */
   const nameTakenMessage = () => (
     <Grid item xs={12}>
       <Typography variant="body1" color="red">
-        Name is already used at this organization
+        Column is already used at this organization
       </Typography>
     </Grid>
   );

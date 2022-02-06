@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import { React } from 'react';
 import {
   Grid,
   Table,
@@ -11,18 +11,17 @@ import {
 import PropTypes from 'prop-types';
 import LocationRow from './LocationRow';
 
-export default function LocationTable({ columns, rows }) {
-  const [editableRows, setEditableRows] = useState(rows ? [...rows] : null);
-
-  useEffect(() => {
-    console.log('COLUMNS', columns);
-    console.log('ROWS', rows);
-    setEditableRows(editableRows);
-  });
-
-  const onRowSave = (row, rowId) => {
-    editableRows[rowId] = row;
-    setEditableRows([...editableRows]);
+export default function LocationTable({
+  columns,
+  rows,
+  setOrgLocationStats,
+  setSuccess,
+}) {
+  const onRowChange = (row, rowId) => {
+    setSuccess(false);
+    /* eslint-disable no-param-reassign */
+    rows[rowId] = row;
+    setOrgLocationStats(rows);
   };
 
   const getColumnHeader = (columnName) => (
@@ -35,31 +34,34 @@ export default function LocationTable({ columns, rows }) {
 
   return (
     <Grid item xs={12}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell><Typography variant="h5">Location</Typography></TableCell>
-            {(columns && columns.length > 0)
-              ? (columns.map((column) => getColumnHeader(column.name)))
-              : (
-                <Typography>
-                  No columns defined in this organization. Please add columns to the organization
-                </Typography>
-              )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {editableRows && editableRows.map((row, index) => (
-            <LocationRow
-              key={row.name}
-              columns={columns}
-              row={Object.assign(row, { id: index })}
-              onRowSave={onRowSave}
-            />
-          ))}
-        </TableBody>
-      </Table>
+      {(columns && columns.length > 0)
+        ? (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>
+                  <Typography variant="h5">Location</Typography>
+                </TableCell>
+                {columns.map((column) => getColumnHeader(column.name))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows && rows.map((row, index) => (
+                <LocationRow
+                  key={row.locationStatId}
+                  columns={columns}
+                  row={Object.assign(row, { id: index })}
+                  onRowChange={onRowChange}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <Typography>
+            No columns defined in this organization. Please add columns to the organization.
+          </Typography>
+        )}
     </Grid>
   );
 }
@@ -71,13 +73,15 @@ LocationTable.propTypes = {
   })),
   rows: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
-    data: PropTypes.instanceOf(Map),
+    locationColumnIdToValue: PropTypes.objectOf(PropTypes.string),
     history: PropTypes.arrayOf(PropTypes.shape({
       date: PropTypes.string,
       data: PropTypes.instanceOf(Map),
     })),
     editMode: PropTypes.bool,
   })),
+  setOrgLocationStats: PropTypes.func.isRequired,
+  setSuccess: PropTypes.func.isRequired,
 };
 
 LocationTable.defaultProps = {
