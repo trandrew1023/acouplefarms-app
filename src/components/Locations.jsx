@@ -272,7 +272,7 @@ export default function Locations() {
         <Fab
           aria-label="save"
           color="primary"
-          disabled={saveLoading}
+          disabled={saveLoading || !(columns && columns.length > 0)}
           sx={buttonSx}
           onClick={() => handleSave()}
         >
