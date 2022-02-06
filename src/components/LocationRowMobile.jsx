@@ -13,7 +13,7 @@ export default function LocationRowMobile(props) {
 
   const getEmptyColumns = () => {
     const columnIdToValue = new Map();
-    columns.foreach((column) => (
+    columns.map((column) => (
       columnIdToValue.set(column.id.toString(), '')
     ));
     return columnIdToValue;
