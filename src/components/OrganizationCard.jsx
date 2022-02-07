@@ -1,34 +1,56 @@
 import { React } from 'react';
 import {
   Card,
+  CardActions,
+  CardActionArea,
   CardContent,
+  Grid,
+  IconButton,
   Typography,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 export default function OrganizationCard({ organizationDetails }) {
   const navigate = useNavigate();
+
   return (
     organizationDetails.active
     && (
       <Card
         sx={{
-          '&:hover': {
-            backgroundColor: 'primary.main',
-            opacity: [0.9, 0.8, 0.7],
-            cursor: 'pointer',
-          },
           mt: 1,
         }}
-        onClick={() => navigate('/locations', { state: { organizationDetails } })}
         variant="outlined"
+        display="flex"
       >
-        <CardContent>
-          <Typography>
-            {organizationDetails.name}
-          </Typography>
-        </CardContent>
+        <Grid
+          container
+          alignItems="center"
+        >
+          <Grid item xs={organizationDetails.admin ? 10 : 12}>
+            <CardActionArea
+              onClick={() => navigate('/locations', { state: { organizationDetails } })}
+            >
+              <CardContent>
+                <Typography variant="h6">
+                  {organizationDetails.name}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Grid>
+          <Grid item xs={2}>
+            {organizationDetails.admin
+              && (
+                <CardActions>
+                  <IconButton onClick={() => navigate('/edit-organization', { state: { organization: organizationDetails } })}>
+                    <EditIcon />
+                  </IconButton>
+                </CardActions>
+              )}
+          </Grid>
+        </Grid>
       </Card>
     )
   );
@@ -43,6 +65,7 @@ OrganizationCard.propTypes = {
     phoneNumber: PropTypes.string,
     createDate: PropTypes.string,
     updateDate: PropTypes.string,
+    admin: PropTypes.bool,
     active: PropTypes.bool,
   }).isRequired,
 };

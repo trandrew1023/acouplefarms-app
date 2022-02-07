@@ -59,7 +59,8 @@ export default function LocationTable({
           </Table>
         ) : (
           <Typography>
-            No columns defined in this organization. Please add columns to the organization.
+            No columns defined in this organization.
+            Please have an admin configure this organization.
           </Typography>
         )}
     </Grid>

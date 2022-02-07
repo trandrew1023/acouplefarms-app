@@ -7,12 +7,9 @@ import {
   CircularProgress,
   Container,
   Grid,
-  IconButton,
   Link,
   Typography,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import { useNavigate } from 'react-router-dom';
 import OrganizationCard from './OrganizationCard';
 import { getUserOrganizations } from '../service';
 
@@ -20,7 +17,6 @@ export default function Organizations() {
   const [organizations, setOrganizations] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasErrors, setHasErrors] = useState(false);
-  const navigate = useNavigate();
 
   const sortOrgs = (organizationsToSort) => (
     organizationsToSort.sort((a, b) => (
@@ -50,13 +46,8 @@ export default function Organizations() {
           container
           key={organization.id}
         >
-          <Grid item xs={10}>
+          <Grid item xs={12}>
             <OrganizationCard key={organization.id} organizationDetails={organization} />
-          </Grid>
-          <Grid item xs={2}>
-            <IconButton onClick={() => navigate('/edit-organization', { state: { organization } })}>
-              <EditIcon />
-            </IconButton>
           </Grid>
         </Grid>
       )
@@ -90,13 +81,13 @@ export default function Organizations() {
         container
         direction="row"
         sx={{
-          marginTop: 8,
+          marginTop: 3,
           alignItems: 'left',
           maxWidth: 500,
           backgroundColor: 'primary',
         }}
       >
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ textAlign: 'center' }}>
           <Typography variant="h4">
             Organizations
           </Typography>

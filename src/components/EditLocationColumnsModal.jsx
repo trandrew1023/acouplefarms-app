@@ -2,6 +2,7 @@ import { React, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  CircularProgress,
   Grid,
   IconButton,
   Modal,
@@ -9,7 +10,8 @@ import {
   Typography,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { red } from '@mui/material/colors';
+import CheckIcon from '@mui/icons-material/Check';
+import { green, red } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { getOrgLocationColumns, saveLocationColumn } from '../service';
@@ -26,6 +28,8 @@ export default function EditLocationColumnsModal({
   const [addColumn, setAddColumn] = useState(false);
   const [nameTaken, setNameTaken] = useState(false);
   const [errors, setErrors] = useState(null);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const sortColumns = (columnsToSort) => (
     columnsToSort.sort((a, b) => (
@@ -37,8 +41,17 @@ export default function EditLocationColumnsModal({
     const locationColumnsResponse = await getOrgLocationColumns(organization.id);
     sortColumns(locationColumnsResponse);
     setLocationColumns(locationColumnsResponse);
-    console.log(locationColumnsResponse);
   }, []);
+
+  const buttonSx = {
+    ...(success && {
+      bgcolor: green[500],
+      '&:hover': {
+        bgcolor: green[700],
+      },
+    }),
+    width: '30%',
+  };
 
   const style = {
     position: 'absolute',
@@ -48,7 +61,7 @@ export default function EditLocationColumnsModal({
     width: '60%',
     maxWidth: '300px',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: '1px solid #000',
     boxShadow: 24,
     p: 4,
   };
@@ -62,12 +75,14 @@ export default function EditLocationColumnsModal({
   });
 
   const clearForm = () => {
+    setErrors(null);
     setLocationColumnDetails({
       name: '',
     });
   };
 
   const handleFormChange = (prop) => (event) => {
+    setSuccess(false);
     setLocationColumnDetails({ ...locationColumnDetails, [prop]: event.target.value });
   };
 
@@ -84,22 +99,32 @@ export default function EditLocationColumnsModal({
     return hasError;
   };
 
+  const sleep = (ms) => (
+    // eslint-disable-next-line no-promise-executor-return
+    new Promise((resolve) => setTimeout(resolve, ms))
+  );
+
   /**
    * Handles form submission.
    */
   const handleSubmit = async () => {
+    setSuccess(false);
     if (hasErrors()) {
       return;
     }
+    setSaveLoading(true);
+    await sleep(500);
     const response = await saveLocationColumn(locationColumnDetails, organization.id);
     if (response.status === 204) {
       setLocationColumns(await getOrgLocationColumns(organization.id));
       clearForm();
+      setSuccess(true);
     } else if (response.status === 400) {
       setErrors((prevErrors) => ({ ...prevErrors, badParam: true }));
     } else if (response.status === 409) {
       setNameTaken(true);
     }
+    setSaveLoading(false);
   };
 
   /**
@@ -189,14 +214,29 @@ export default function EditLocationColumnsModal({
           <ThemeProvider theme={theme}>
             <Button
               variant="contained"
+              disabled={saveLoading}
               onClick={() => setAddColumn(false)}
               sx={{ mr: 1 }}
             >
               <Typography>Cancel</Typography>
             </Button>
           </ThemeProvider>
-          <Button variant="contained" onClick={() => handleSubmit()}>
-            <Typography>Add</Typography>
+          <Button
+            variant="contained"
+            disabled={saveLoading}
+            onClick={() => handleSubmit()}
+            sx={buttonSx}
+          >
+            {success ? <CheckIcon /> : <Typography>Add</Typography>}
+            {saveLoading && (
+              <CircularProgress
+                size={30}
+                sx={{
+                  color: green[500],
+                  position: 'absolute',
+                }}
+              />
+            )}
           </Button>
         </Box>
       </Grid>
@@ -210,6 +250,11 @@ export default function EditLocationColumnsModal({
     >
       <Box component="form" sx={style}>
         <Grid container>
+          <Grid item xs={12}>
+            <Typography variant="h5">
+              Columns
+            </Typography>
+          </Grid>
           {locationColumns && locationColumns.length > 0 ? (
             locationColumns.map((locationColumn) => (
               <Grid key={locationColumn.id} item xs={12}>

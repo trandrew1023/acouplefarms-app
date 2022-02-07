@@ -2,15 +2,17 @@ import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import EditOrganization from './components/EditOrganization';
-import Home from './components/Home';
+import ForgotPassword from './components/ForgotPassword';
 import Header from './components/Header';
+import Home from './components/Home';
 import Locations from './components/Locations';
 import Login from './components/Login';
-import SignUp from './components/SignUp';
-import Profile from './components/Profile';
-import useTokens from './tokenUtil';
-import Organizations from './components/Organizations';
 import NewOrganization from './components/NewOrganization';
+import Organizations from './components/Organizations';
+import Profile from './components/Profile';
+import ResetPassword from './components/ResetPassword';
+import SignUp from './components/SignUp';
+import useTokens from './tokenUtil';
 
 function App() {
   const { tokens, setTokens, userDetails } = useTokens();
@@ -26,7 +28,10 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login setTokens={setTokens} />} />
             <Route path="/register" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<Home />} />
+            <Route path="*" element={<Home />} />
           </Routes>
         </>
       </Router>
@@ -48,6 +53,7 @@ function App() {
           <Route path="/locations" element={<Locations />} />
           <Route path="/profile" element={<Profile userDetails={userDetails} />} />
           <Route path="/" element={<Organizations />} />
+          <Route path="*" element={<Organizations />} />
         </Routes>
       </>
     </Router>

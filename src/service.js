@@ -84,6 +84,28 @@ export function register(userDetails) {
     .catch((error) => error.response);
 }
 
+export function emailResetPassword(username) {
+  const params = new URLSearchParams();
+  params.append('username', username);
+  return axiosInstance.post('user/email/reset-password', params)
+    .then((response) => response)
+    .catch((error) => error.response);
+}
+
+export function resetPassword(passwordResetCriteria) {
+  return axiosInstance.post('user/reset-password', passwordResetCriteria)
+    .then((response) => response)
+    .catch((error) => console.log(error));
+}
+
+export function checkResetToken(token) {
+  const params = new URLSearchParams();
+  params.append('token', token);
+  return axiosInstance.post('user/reset-token', params)
+    .then((response) => response)
+    .catch((error) => error.response);
+}
+
 export function getUserOrganizations() {
   return axiosInstance.get('user/organizations')
     .then((response) => response)

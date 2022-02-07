@@ -33,15 +33,18 @@ export default function LocationTableMobile({
     <Grid
       container
       direction="column"
-      alignItems="bottom"
+      alignItems="center"
       justifyContent="center"
     >
       {(columns && columns.length > 0)
         ? getRows()
         : (
-          <Typography>
-            No columns defined in this organization. Please add columns to the organization
-          </Typography>
+          <Grid item xs={12} sx={{ mt: 1, width: '90%' }}>
+            <Typography>
+              No columns defined in this organization.
+              Please have an admin configure this organization.
+            </Typography>
+          </Grid>
         )}
     </Grid>
   );

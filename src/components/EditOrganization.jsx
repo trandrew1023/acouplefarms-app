@@ -54,7 +54,7 @@ export default function EditOrganization() {
       startIcon={<AddCircleOutlineIcon />}
       variant="contained"
       onClick={() => setLocationModalOpen(true)}
-      sx={{ width: '60%', mt: 1 }}
+      sx={{ width: '60%', mt: 2 }}
     >
       <Typography variant="button">
         Add location
@@ -67,7 +67,7 @@ export default function EditOrganization() {
       startIcon={<EditIcon />}
       variant="contained"
       onClick={() => setLocationColumnModalOpen(true)}
-      sx={{ width: '60%' }}
+      sx={{ width: '60%', mt: 2 }}
     >
       <Typography variant="button">
         Edit columns
@@ -80,7 +80,7 @@ export default function EditOrganization() {
       startIcon={<PersonAddIcon />}
       variant="contained"
       onClick={() => setUserOrgAssociationModalOpen(true)}
-      sx={{ width: '60%' }}
+      sx={{ width: '60%', mt: 2 }}
     >
       <Typography variant="button">
         Edit users
@@ -103,36 +103,61 @@ export default function EditOrganization() {
           {state.organization.name}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item sx={{ width: window.innerWidth > 485 ? '50%' : '80%' }}>
         {(locations && locations.length > 0) ? (
           <>
-            <Grid container sx={{ mt: 2 }}>
-              {locations.map((location) => (
-                <Fragment key={location.id}>
-                  {renderLocations(location)}
-                </Fragment>
-              ))}
-              {addNewLocation()}
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography variant="h4">
+                Locations:
+              </Typography>
             </Grid>
             <Grid
               container
+              direction="column"
+              alignItems="left"
+              justifyContent="center"
+              sx={{ mt: 1 }}
+            >
+              {locations.map((location) => (
+                <Grid
+                  key={location.id}
+                  item
+                  xs={12}
+                >
+                  {renderLocations(location)}
+                </Grid>
+              ))}
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justifyContent="center"
               sx={{ mt: 2 }}
             >
-              <Grid item xs={12}>
-                {editLocationColumns()}
-              </Grid>
-              <Grid item xs={12} sx={{ mt: 2 }}>
-                {editUsers()}
-              </Grid>
+              {addNewLocation()}
+              {editLocationColumns()}
+              {editUsers()}
             </Grid>
           </>
         ) : (
-          <>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ mt: 1 }}
+          >
             <Typography>
               This organization has no locations. Add a location to get started.
             </Typography>
             {addNewLocation()}
-          </>
+          </Grid>
         )}
       </Grid>
       {locationModalOpen
