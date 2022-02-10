@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,7 +30,7 @@ export default function OrganizationCard({ organizationDetails }) {
           container
           alignItems="center"
         >
-          <Grid item xs={organizationDetails.admin ? 10 : 12}>
+          <Grid item xs={organizationDetails.admin ? 8 : 10}>
             <CardActionArea
               onClick={() => navigate('/locations', { state: { organizationDetails } })}
             >
@@ -39,6 +40,13 @@ export default function OrganizationCard({ organizationDetails }) {
                 </Typography>
               </CardContent>
             </CardActionArea>
+          </Grid>
+          <Grid item xs={2}>
+            <CardActions>
+              <IconButton onClick={() => navigate('/line-chart', { state: { organization: organizationDetails } })}>
+                <QueryStatsIcon />
+              </IconButton>
+            </CardActions>
           </Grid>
           <Grid item xs={2}>
             {organizationDetails.admin

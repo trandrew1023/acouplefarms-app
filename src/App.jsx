@@ -13,6 +13,7 @@ import Profile from './components/Profile';
 import ResetPassword from './components/ResetPassword';
 import SignUp from './components/SignUp';
 import useTokens from './tokenUtil';
+import StatLineChart from './components/StatLineChart';
 
 function App() {
   const { tokens, setTokens, userDetails } = useTokens();
@@ -47,11 +48,12 @@ function App() {
           userDetails={userDetails}
         />
         <Routes>
-          <Route path="/edit-organization" element={<EditOrganization />} />
-          <Route path="/organizations" element={<Organizations />} />
-          <Route path="/new-organization" element={<NewOrganization />} />
-          <Route path="/locations" element={<Locations />} />
           <Route path="/profile" element={<Profile userDetails={userDetails} />} />
+          <Route path="/edit-organization" element={<EditOrganization />} />
+          <Route path="/new-organization" element={<NewOrganization />} />
+          <Route path="/organizations" element={<Organizations />} />
+          <Route path="/line-chart" element={<StatLineChart />} />
+          <Route path="/locations" element={<Locations />} />
           <Route path="/" element={<Organizations />} />
           <Route path="*" element={<Organizations />} />
         </Routes>

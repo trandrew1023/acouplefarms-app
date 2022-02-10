@@ -1,12 +1,14 @@
 import {
-  Fragment,
   React,
   useEffect,
   useState,
 } from 'react';
 import {
   Button,
+  Card,
+  CardActions,
   Grid,
+  IconButton,
   Typography,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -17,13 +19,16 @@ import AddLocationModal from './AddLocationModal';
 import EditLocationColumnsModal from './EditLocationColumnsModal';
 import UserOrgAssociationModal from './UserOrgAssociationModal';
 import { getOrgLocations } from '../service';
+import EditLocationModal from './EditLocatonModal';
 
 export default function EditOrganization() {
   const { state } = useLocation();
   const [locations, setLocations] = useState(null);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
+  const [editLocationModalOpen, setEditLocationModalOpen] = useState(false);
   const [locationColumnModalOpen, setLocationColumnModalOpen] = useState(false);
   const [userOrgAssociationModalOpen, setUserOrgAssociationModalOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   const sortLocations = (locationsToSort) => (
     locationsToSort.sort((a, b) => (
@@ -37,17 +42,6 @@ export default function EditOrganization() {
     sortLocations(locationsResponse);
     setLocations(locationsResponse);
   }, []);
-
-  const renderLocations = (location) => (
-    <Grid item xs={12}>
-      <Typography
-        variant="h5"
-        key={location.id}
-      >
-        {location.name}
-      </Typography>
-    </Grid>
-  );
 
   const addNewLocation = () => (
     <Button
@@ -88,6 +82,11 @@ export default function EditOrganization() {
     </Button>
   );
 
+  const editLocation = (location) => {
+    setEditLocationModalOpen(true);
+    setSelectedLocation(location);
+  };
+
   return (
     <Grid
       container
@@ -116,23 +115,43 @@ export default function EditOrganization() {
                 Locations:
               </Typography>
             </Grid>
-            <Grid
-              container
-              direction="column"
-              alignItems="left"
-              justifyContent="center"
-              sx={{ mt: 1 }}
-            >
-              {locations.map((location) => (
+            {locations.map((location) => (
+              <Card
+                key={location.id}
+                sx={{
+                  mt: 1,
+                }}
+                variant="outlined"
+                display="flex"
+              >
                 <Grid
-                  key={location.id}
-                  item
-                  xs={12}
+                  container
+                  alignItems="center"
                 >
-                  {renderLocations(location)}
+                  <Grid
+                    key={location.id}
+                    item
+                    xs={10}
+                  >
+                    <Typography
+                      variant="h5"
+                      key={location.id}
+                    >
+                      {location.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <CardActions>
+                      <IconButton
+                        onClick={() => editLocation(location)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </CardActions>
+                  </Grid>
                 </Grid>
-              ))}
-            </Grid>
+              </Card>
+            ))}
             <Grid
               container
               direction="column"
@@ -181,6 +200,15 @@ export default function EditOrganization() {
           organization={state.organization}
           userOrgAssociationModalOpen={userOrgAssociationModalOpen}
           setUserOrgAssociationModalOpen={setUserOrgAssociationModalOpen}
+        />
+      )}
+      {editLocationModalOpen && (
+        <EditLocationModal
+          location={selectedLocation}
+          setLocations={setLocations}
+          organizationId={state.organization.id}
+          editLocationModalOpen={editLocationModalOpen}
+          setEditLocationModalOpen={setEditLocationModalOpen}
         />
       )}
     </Grid>

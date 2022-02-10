@@ -175,6 +175,15 @@ export function saveLocation(locationDetails, organizationId) {
     });
 }
 
+export function editLocation(locationDetails) {
+  return axiosInstance.post('/location/edit', locationDetails)
+    .then((response) => response)
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
+}
+
 export function getOrgLocationColumns(organizationId) {
   return axiosInstance.get(`organization/${organizationId}/location-columns`)
     .then((response) => response.data)
@@ -198,6 +207,15 @@ export function saveLocationColumn(locationColumnDetails, organizationId) {
 
 export function getOrgLocationStats(organizationId, date) {
   return axiosInstance.get(`organization/${organizationId}/location-stats/${date}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
+}
+
+export function getOrgLocationStatsBetween(organizationId, startDate, endDate) {
+  return axiosInstance.get(`organization/${organizationId}/location-stats/${startDate}/${endDate}`)
     .then((response) => response.data)
     .catch((error) => {
       console.log(error);
