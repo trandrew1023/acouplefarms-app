@@ -205,6 +205,15 @@ export function saveLocationColumn(locationColumnDetails, organizationId) {
     });
 }
 
+export function editLocationColumn(locationColumnDetails) {
+  return axiosInstance.post('/organization/location-column/edit', locationColumnDetails)
+    .then((response) => response)
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
+}
+
 export function getOrgLocationStats(organizationId, date) {
   return axiosInstance.get(`organization/${organizationId}/location-stats/${date}`)
     .then((response) => response.data)

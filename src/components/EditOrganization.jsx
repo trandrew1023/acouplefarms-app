@@ -102,7 +102,13 @@ export default function EditOrganization() {
           {state.organization.name}
         </Typography>
       </Grid>
-      <Grid item sx={{ width: window.innerWidth > 485 ? '50%' : '80%' }}>
+      <Grid
+        item
+        sx={{
+          width: window.innerWidth > 485 ? '50%' : '80%',
+          mb: 3,
+        }}
+      >
         {(locations && locations.length > 0) ? (
           <>
             <Grid

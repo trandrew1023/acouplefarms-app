@@ -2,6 +2,7 @@ import { React, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Card,
   CircularProgress,
   Grid,
   IconButton,
@@ -11,10 +12,12 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CheckIcon from '@mui/icons-material/Check';
+import EditIcon from '@mui/icons-material/Edit';
 import { green, red } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { getOrgLocationColumns, saveLocationColumn } from '../service';
+import EditColumnModal from './EditColumnModal';
 
 export default function EditLocationColumnsModal({
   organization,
@@ -30,6 +33,8 @@ export default function EditLocationColumnsModal({
   const [errors, setErrors] = useState(null);
   const [saveLoading, setSaveLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [editColumnModalOpen, setEditColumnModalOpen] = useState(false);
+  const [selectedColumn, setSelectedColumn] = useState(null);
 
   const sortColumns = (columnsToSort) => (
     columnsToSort.sort((a, b) => (
@@ -37,10 +42,14 @@ export default function EditLocationColumnsModal({
     ))
   );
 
+  const setLocationColumnsSorted = (locationColumnsToSort) => {
+    sortColumns(locationColumnsToSort);
+    setLocationColumns(locationColumnsToSort);
+  };
+
   useEffect(async () => {
     const locationColumnsResponse = await getOrgLocationColumns(organization.id);
-    sortColumns(locationColumnsResponse);
-    setLocationColumns(locationColumnsResponse);
+    setLocationColumnsSorted(locationColumnsResponse);
   }, []);
 
   const buttonSx = {
@@ -243,33 +252,73 @@ export default function EditLocationColumnsModal({
     </Grid>
   );
 
-  return (
-    <Modal
-      open={locationColumnModalOpen}
-      onClose={() => setLocationColumnModalOpen(false)}
-    >
-      <Box component="form" sx={style}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography variant="h5">
-              Columns
-            </Typography>
-          </Grid>
-          {locationColumns && locationColumns.length > 0 ? (
-            locationColumns.map((locationColumn) => (
-              <Grid key={locationColumn.id} item xs={12}>
+  const getLocationColumns = () => (
+    locationColumns && locationColumns.length > 0 ? (
+      locationColumns.map((locationColumn) => (
+        <Grid key={locationColumn.id} item xs={12}>
+          <Card
+            sx={{
+              mt: 1,
+            }}
+            variant="outlined"
+            display="flex"
+          >
+            <Grid
+              container
+              alignItems="center"
+            >
+              <Grid item xs={10}>
                 <Typography>
                   {locationColumn.name}
                 </Typography>
               </Grid>
-            ))
-          ) : (
-            <Typography>Add location columns to begin tracking in this organization</Typography>
-          )}
+              <Grid item xs={2}>
+                <IconButton
+                  onClick={() => {
+                    setSelectedColumn(locationColumn);
+                    setEditColumnModalOpen(true);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Card>
         </Grid>
-        {addColumn ? addLocationColumn() : addLocationColumnButton()}
-      </Box>
-    </Modal>
+      ))
+    ) : (
+      <Typography>Add location columns to begin tracking in this organization</Typography>
+    ));
+
+  return (
+    <>
+      <Modal
+        open={locationColumnModalOpen}
+        onClose={() => setLocationColumnModalOpen(false)}
+      >
+        <Box component="form" sx={style}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="h5">
+                Columns
+              </Typography>
+            </Grid>
+            {getLocationColumns()}
+          </Grid>
+          {addColumn ? addLocationColumn() : addLocationColumnButton()}
+        </Box>
+      </Modal>
+      {editColumnModalOpen
+        && (
+          <EditColumnModal
+            column={selectedColumn}
+            setColumns={setLocationColumnsSorted}
+            organizationId={organization.id}
+            editColumnModalOpen={editColumnModalOpen}
+            setEditColumnModalOpen={setEditColumnModalOpen}
+          />
+        )}
+    </>
   );
 }
 
