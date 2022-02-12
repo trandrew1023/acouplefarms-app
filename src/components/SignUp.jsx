@@ -101,10 +101,12 @@ export default function SignUp() {
       return;
     }
     const response = await register(userDetails);
+    console.log(response);
     if (response.status === 204) {
       clearForm();
       setSubmitSucceeded(true);
     } else if (response.status === 400) {
+      setErrors((prevErrors) => ({ ...prevErrors, username: true }));
       setErrors((prevErrors) => ({ ...prevErrors, badParam: true }));
     } else if (response.status === 409) {
       if (response.data === 'username') {

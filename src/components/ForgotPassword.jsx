@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Container,
   CssBaseline,
   Grid,
@@ -10,8 +11,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-// import { useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import EmailValidator from 'email-validator';
 import { emailResetPassword } from '../service';
 import logo from '../images/hen.png';
 
@@ -23,7 +24,7 @@ export default function ForgotPassword() {
   const [hasUsernameError, setUsernameError] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [hasSubmitError, setSubmitError] = useState(false);
-  // const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const theme = createTheme();
   const handleFormChange = (prop) => (event) => {
     setPasswordResetForm({ ...passwordResetForm, [prop]: event.target.value });
@@ -52,6 +53,7 @@ export default function ForgotPassword() {
     if (!passwordResetForm.username) {
       hasError = true;
       setUsernameError(true);
+      setIsLoading(false);
     }
     setSubmitError(hasError);
     return hasError;
@@ -59,17 +61,23 @@ export default function ForgotPassword() {
 
   const handleResetPassword = async () => {
     setSubmitSuccess(false);
+    setIsLoading(true);
     if (hasErrors()) {
       return;
     }
-    const response = await emailResetPassword(passwordResetForm.username);
-    console.log(response);
+    let response = '';
+    if (EmailValidator.validate(passwordResetForm.username)) {
+      response = await emailResetPassword('', passwordResetForm.username);
+    } else {
+      response = await emailResetPassword(passwordResetForm.username, '');
+    }
     if (response.status === 204) {
       setPasswordResetForm({ username: '' });
       setSubmitSuccess(true);
     } else if (response.status === 404) {
       setInvalidUsername(true);
     }
+    setIsLoading(false);
   };
 
   const handleKeypress = (e) => {
@@ -116,7 +124,7 @@ export default function ForgotPassword() {
           <Typography component="h1" variant="h5">
             Forgot password
           </Typography>
-          <Box component="form" sx={{ mt: 1 }}>
+          <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -133,11 +141,20 @@ export default function ForgotPassword() {
             {submitSuccess && emailSentMessage()}
             <Button
               fullWidth
+              disabled={submitSuccess || isLoading}
               variant="contained"
               onClick={handleResetPassword}
               sx={{ mt: 3, mb: 2 }}
             >
               Reset password
+              {isLoading && (
+                <CircularProgress
+                  size={30}
+                  sx={{
+                    position: 'absolute',
+                  }}
+                />
+              )}
             </Button>
             <Grid
               container

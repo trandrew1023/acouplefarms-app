@@ -14,6 +14,7 @@ import ResetPassword from './components/ResetPassword';
 import SignUp from './components/SignUp';
 import useTokens from './tokenUtil';
 import StatLineChart from './components/StatLineChart';
+import NavigateSetter from './components/NavigateSetter';
 
 function App() {
   const { tokens, setTokens, userDetails } = useTokens();
@@ -42,13 +43,15 @@ function App() {
   return (
     <Router>
       <>
+        <NavigateSetter />
         <Header
           isLoggedIn
           setTokens={setTokens}
           userDetails={userDetails}
         />
         <Routes>
-          <Route path="/profile" element={<Profile userDetails={userDetails} />} />
+          <Route path="/login" element={localStorage.getItem('tokens') ? <Login setTokens={setTokens} /> : <Organizations />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/edit-organization" element={<EditOrganization />} />
           <Route path="/new-organization" element={<NewOrganization />} />
           <Route path="/organizations" element={<Organizations />} />

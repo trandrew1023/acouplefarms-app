@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { History } from './components/NavigateSetter';
 
 const headerKey = process.env.REACT_APP_HEADER_KEY;
 
@@ -56,6 +57,8 @@ axiosInstance.interceptors.response.use(
         if (response.status === 401) {
           localStorage.clear();
           console.log('need to sign in again');
+          History.navigate('/login');
+          window.location.reload();
         }
       }
     }
@@ -84,9 +87,10 @@ export function register(userDetails) {
     .catch((error) => error.response);
 }
 
-export function emailResetPassword(username) {
+export function emailResetPassword(username, email) {
   const params = new URLSearchParams();
   params.append('username', username);
+  params.append('email', email);
   return axiosInstance.post('user/email/reset-password', params)
     .then((response) => response)
     .catch((error) => error.response);

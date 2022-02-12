@@ -1,10 +1,19 @@
-import { React, useEffect } from 'react';
+import { React, useEffect, useState } from 'react';
 import { Container, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
+import {
+  getUser,
+} from '../service';
 
-export default function Profile({ userDetails }) {
-  useEffect(() => {
+export default function Profile() {
+  const [userDetails, setUserDetails] = useState(null);
+  useEffect(async () => {
     document.title = 'Profile - aCOUPlefarms';
+    const userDetailsResponse = await getUser();
+    if (userDetailsResponse) {
+      setUserDetails(userDetailsResponse);
+    } else {
+      setUserDetails(null);
+    }
   }, []);
 
   return (
@@ -25,12 +34,3 @@ export default function Profile({ userDetails }) {
     ) : null
   );
 }
-
-Profile.propTypes = {
-  userDetails: PropTypes.shape({
-    username: PropTypes.string,
-    firstname: PropTypes.string,
-    lastname: PropTypes.string,
-    email: PropTypes.string,
-  }).isRequired,
-};

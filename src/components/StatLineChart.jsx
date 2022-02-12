@@ -38,7 +38,7 @@ export default function StatLineChart() {
     new Date(dateToConvert - timezoneOffset).toISOString().split('T')[0]
   );
 
-  const [dateRange, setDateRange] = useState([getOffsetDate(0), getOffsetDate(7)]);
+  const [dateRange, setDateRange] = useState([getOffsetDate(-7), getOffsetDate(0)]);
 
   const retrieveStats = async (startDate, endDate) => {
     setIsLoading(true);

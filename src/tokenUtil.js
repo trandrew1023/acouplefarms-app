@@ -23,7 +23,11 @@ export default function useTokens() {
     } else {
       localStorage.setItem('tokens', JSON.stringify(tokensToSave));
       const userDetailsResponse = await getUser(tokensToSave);
-      localStorage.setItem('user', JSON.stringify(userDetailsResponse));
+      localStorage.setItem('user', JSON.stringify({
+        username: userDetailsResponse.username,
+        firstname: userDetailsResponse.firstname,
+        lastname: userDetailsResponse.lastname,
+      }));
       setUserDetails(userDetailsResponse);
     }
     setTokens(tokensToSave);

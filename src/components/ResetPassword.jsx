@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Container,
   CssBaseline,
   IconButton,
@@ -30,6 +31,7 @@ export default function ResetPassword() {
   const [hasPasswordError, setPasswordError] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [tokenUsed, setTokenUsed] = useState(false);
   // const navigate = useNavigate();
   const theme = createTheme();
@@ -96,8 +98,10 @@ export default function ResetPassword() {
   };
 
   const handleResetPassword = async () => {
+    setIsLoading(true);
     resetErrors();
     if (hasErrors()) {
+      setIsLoading(false);
       return;
     }
     const response = await resetPassword({
@@ -107,9 +111,10 @@ export default function ResetPassword() {
     if (response.status === 204) {
       clearForm();
       setSubmitSuccess(true);
-      return;
+    } else {
+      setTokenUsed(true);
     }
-    setTokenUsed(true);
+    setIsLoading(false);
   };
 
   const handleKeypress = (e) => {
@@ -225,12 +230,20 @@ export default function ResetPassword() {
             {submitSuccess && successMessage()}
             <Button
               fullWidth
-              disabled={tokenUsed}
+              disabled={tokenUsed || submitSuccess || isLoading}
               variant="contained"
               onClick={handleResetPassword}
               sx={{ mt: 3, mb: 2 }}
             >
               Reset password
+              {isLoading && (
+                <CircularProgress
+                  size={30}
+                  sx={{
+                    position: 'absolute',
+                  }}
+                />
+              )}
             </Button>
           </Box>
         </Box>
