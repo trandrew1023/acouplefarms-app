@@ -168,7 +168,7 @@ export function getOrgLocations(organizationId) {
 }
 
 export function saveLocation(locationDetails, organizationId) {
-  return axiosInstance.post('/location', {
+  return axiosInstance.post('location', {
     name: locationDetails.name,
     organizationId,
   })
@@ -180,7 +180,7 @@ export function saveLocation(locationDetails, organizationId) {
 }
 
 export function editLocation(locationDetails) {
-  return axiosInstance.post('/location/edit', locationDetails)
+  return axiosInstance.post('location/edit', locationDetails)
     .then((response) => response)
     .catch((error) => {
       console.log(error);
@@ -198,7 +198,7 @@ export function getOrgLocationColumns(organizationId) {
 }
 
 export function saveLocationColumn(locationColumnDetails, organizationId) {
-  return axiosInstance.post('/organization/location-column', {
+  return axiosInstance.post('organization/location-column', {
     name: locationColumnDetails.name,
     organizationId,
   })
@@ -210,7 +210,7 @@ export function saveLocationColumn(locationColumnDetails, organizationId) {
 }
 
 export function editLocationColumn(locationColumnDetails) {
-  return axiosInstance.post('/organization/location-column/edit', locationColumnDetails)
+  return axiosInstance.post('organization/location-column/edit', locationColumnDetails)
     .then((response) => response)
     .catch((error) => {
       console.log(error);
