@@ -76,11 +76,6 @@ export default function EditLocationModal({
     return hasError;
   };
 
-  const sleep = (ms) => (
-    // eslint-disable-next-line no-promise-executor-return
-    new Promise((resolve) => setTimeout(resolve, ms))
-  );
-
   /**
    * Handles form submission.
    */
@@ -90,7 +85,6 @@ export default function EditLocationModal({
       return;
     }
     setSaveLoading(true);
-    await sleep(500);
     const response = await editLocation(locationDetails);
     if (response.status === 204) {
       setSuccess(true);

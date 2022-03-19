@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -12,11 +12,31 @@ import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
+import {
+  getProfileImage,
+  getUser,
+} from '../service';
 
-export default function AccountMenu({ setTokens, userDetails }) {
+export default function AccountMenu({ setTokens }) {
+  const [userDetails, setUserDetails] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+
+  useEffect(async () => {
+    const userDetailsResponse = await getUser();
+    const profileImageResponse = await getProfileImage();
+    if (userDetailsResponse) {
+      setUserDetails(userDetailsResponse);
+    } else {
+      setUserDetails(null);
+    }
+    if (profileImageResponse) {
+      setImageURL(profileImageResponse.data.url);
+    }
+  }, []);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -31,7 +51,7 @@ export default function AccountMenu({ setTokens, userDetails }) {
 
   const handleLogoutClick = () => {
     setTokens(null);
-    navigate('/');
+    navigate('/login');
   };
 
   const stringToColor = (string) => {
@@ -58,14 +78,21 @@ export default function AccountMenu({ setTokens, userDetails }) {
     <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
       <Tooltip title="Account settings">
         <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
-          <Avatar
-            sx={{ width: 40, height: 40, bgcolor: stringToColor(userDetails.username) }}
-          >
-            <Typography>
-              {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
-              {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
-            </Typography>
-          </Avatar>
+          {imageURL ? (
+            <Avatar
+              sx={{ bgcolor: 'white' }}
+              src={imageURL}
+            />
+          ) : (
+            <Avatar
+              sx={{ width: 40, height: 40, bgcolor: stringToColor(userDetails.username) }}
+            >
+              <Typography>
+                {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
+                {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
+              </Typography>
+            </Avatar>
+          )}
         </IconButton>
       </Tooltip>
     </Box>
@@ -75,12 +102,22 @@ export default function AccountMenu({ setTokens, userDetails }) {
     if (userDetails) {
       return (
         <>
-          <Avatar
-            sx={{ bgcolor: stringToColor(userDetails.username) }}
-          >
-            {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
-            {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
-          </Avatar>
+          {imageURL ? (
+            <Avatar
+              src={imageURL}
+              sx={{
+                width: 100,
+                height: 100,
+              }}
+            />
+          ) : (
+            <Avatar
+              sx={{ bgcolor: stringToColor(userDetails.username) }}
+            >
+              {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
+              {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
+            </Avatar>
+          )}
           <Typography variant="h5" color="black" align="center">
             {userDetails.username}
           </Typography>
@@ -92,7 +129,7 @@ export default function AccountMenu({ setTokens, userDetails }) {
 
   return (
     <>
-      {getUserIcon()}
+      {userDetails && getUserIcon()}
       <Menu
         anchorEl={anchorEl}
         open={open}
@@ -153,14 +190,4 @@ export default function AccountMenu({ setTokens, userDetails }) {
 
 AccountMenu.propTypes = {
   setTokens: PropTypes.func.isRequired,
-  userDetails: PropTypes.shape({
-    username: PropTypes.string,
-    firstname: PropTypes.string,
-    lastname: PropTypes.string,
-    email: PropTypes.string,
-  }),
-};
-
-AccountMenu.defaultProps = {
-  userDetails: null,
 };

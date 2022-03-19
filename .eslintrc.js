@@ -21,5 +21,10 @@ module.exports = {
     "indent": "off",
     "react/jsx-indent": "off",
     "react/jsx-indent-props": "off",
+    "jsx-a11y/label-has-associated-control": ["error", {
+      "required": {
+        "some": ["nesting", "id"]
+      }
+    }],
   },
 };

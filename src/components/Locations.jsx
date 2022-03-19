@@ -152,11 +152,6 @@ export default function Locations() {
     return value;
   };
 
-  const sleep = (ms) => (
-    // eslint-disable-next-line no-promise-executor-return
-    new Promise((resolve) => setTimeout(resolve, ms))
-  );
-
   const handleSave = async () => {
     const mappedReplacedString = JSON.stringify(orgLocationStats, replacer);
     const formattedOrgLocationStats = JSON.parse(mappedReplacedString, reviver);
@@ -167,7 +162,6 @@ export default function Locations() {
       (new Date(date.value - timezoneOffset)).toISOString().split('T')[0],
       [...formattedOrgLocationStats],
     );
-    await sleep(500);
     if (response.status === 200) {
       setSuccess(true);
     }
@@ -305,8 +299,8 @@ export default function Locations() {
         backgroundColor: 'primary',
       }}
     >
-      <Grid item xs={12}>
-        <Typography variant="h3">{state.organizationDetails.name}</Typography>
+      <Grid item xs={12} sx={{ width: '90%', textAlign: 'center' }}>
+        <Typography noWrap variant="h3">{state.organizationDetails.name}</Typography>
       </Grid>
       <Grid item xs={12}>
         <BasicDatePicker date={date} changeDate={changeDate} />

@@ -67,11 +67,6 @@ export default function UserOrgAssociationModal({
     },
   });
 
-  const sleep = (ms) => (
-    // eslint-disable-next-line no-promise-executor-return
-    new Promise((resolve) => setTimeout(resolve, ms))
-  );
-
   /**
    * Handles form submission.
    */
@@ -83,7 +78,6 @@ export default function UserOrgAssociationModal({
       organization.id,
       userIds,
     );
-    await sleep(500);
     if (response.status === 204) {
       const orgUsers = await getOrgUsers(organization.id);
       setOrgFormDetails({ ...orgFormDetails, searchUsers: [], users: orgUsers });

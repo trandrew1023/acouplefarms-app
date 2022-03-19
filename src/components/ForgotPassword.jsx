@@ -82,6 +82,7 @@ export default function ForgotPassword() {
 
   const handleKeypress = (e) => {
     if (e.which === 13) {
+      e.preventDefault();
       handleResetPassword();
     }
   };
@@ -114,6 +115,7 @@ export default function ForgotPassword() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            width: '100%',
           }}
         >
           <Avatar

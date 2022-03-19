@@ -33,9 +33,9 @@ export default function Organizations() {
     if (organizationsResponse || organizationsResponse.status === 200) {
       sortOrgs(organizationsResponse.data);
       setOrganizations(organizationsResponse.data);
-      return;
+    } else {
+      setHasErrors(true);
     }
-    setHasErrors(true);
   }, []);
 
   const getOrganizations = () => (

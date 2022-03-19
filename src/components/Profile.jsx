@@ -3,21 +3,32 @@ import {
   Avatar,
   Container,
   Grid,
+  Input,
+  Tooltip,
   Typography,
 } from '@mui/material';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import {
+  getProfileImage,
   getUser,
+  saveProfileImage,
 } from '../service';
 
-export default function Profile() {
+/* eslint-disable react/prop-types */
+export default function Profile({ profileImagesRef }) {
   const [userDetails, setUserDetails] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
   useEffect(async () => {
     document.title = 'Profile - aCOUPlefarms';
     const userDetailsResponse = await getUser();
+    const profileImageResponse = await getProfileImage();
     if (userDetailsResponse) {
       setUserDetails(userDetailsResponse);
     } else {
       setUserDetails(null);
+    }
+    if (profileImageResponse) {
+      setImageURL(profileImageResponse.data.url);
     }
   }, []);
 
@@ -37,8 +48,14 @@ export default function Profile() {
       color += `00${value.toString(16)}`.substr(-2);
     }
     /* eslint-enable no-bitwise */
-
     return color;
+  };
+
+  const saveImage = async (url) => {
+    const imageDetails = {
+      url,
+    };
+    saveProfileImage(imageDetails);
   };
 
   return (
@@ -51,25 +68,69 @@ export default function Profile() {
           justifyContent="center"
         >
           <Grid item xs={12}>
-            <Avatar
-              sx={{
-                width: 100,
-                height: 100,
-                bgcolor: stringToColor(userDetails.username),
-              }}
-            >
-              <Typography variant="h3">
-                {userDetails.firstname.charAt(0).toUpperCase()}
-                {userDetails.lastname.charAt(0).toUpperCase()}
-              </Typography>
-            </Avatar>
+            <label htmlFor="upload-button">
+              <Input
+                accept="image/*"
+                id="upload-button"
+                type="file"
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  if (file) {
+                    console.log(file);
+                    const newImageRef = ref(profileImagesRef, userDetails.username);
+                    uploadBytes(newImageRef, file).then((response) => {
+                      console.log('Uploaded');
+                      console.log(response);
+                      getDownloadURL(response.ref).then((url) => {
+                        console.log(url);
+                        saveImage(url);
+                      });
+                    });
+                    window.location.reload();
+                  }
+                }}
+                sx={{
+                  display: 'none',
+                }}
+              />
+              <Tooltip title="Change profile image" placement="top">
+                {imageURL ? (
+                  <Avatar
+                    src={imageURL}
+                    sx={{
+                      width: 100,
+                      height: 100,
+                      ':hover': {
+                        cursor: 'pointer',
+                      },
+                    }}
+                  />
+                ) : (
+                  <Avatar
+                    sx={{
+                      width: 100,
+                      height: 100,
+                      bgcolor: stringToColor(userDetails.username),
+                      ':hover': {
+                        cursor: 'pointer',
+                      },
+                    }}
+                  >
+                    <Typography variant="h3">
+                      {userDetails.firstname.charAt(0).toUpperCase()}
+                      {userDetails.lastname.charAt(0).toUpperCase()}
+                    </Typography>
+                  </Avatar>
+                )}
+              </Tooltip>
+            </label>
           </Grid>
           <Typography variant="h4">
             {userDetails.firstname}
             {' '}
             {userDetails.lastname}
           </Typography>
-          <Typography variant="h5">Username</Typography>
+          <Typography variant="h5" sx={{ mt: 2 }}>Username</Typography>
           {userDetails.username}
           <Typography variant="h5">Email</Typography>
           {userDetails.email}

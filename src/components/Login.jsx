@@ -91,6 +91,7 @@ export default function Login({ setTokens }) {
 
   const handleKeypress = (e) => {
     if (e.which === 13) {
+      e.preventDefault();
       handleLogin();
     }
   };

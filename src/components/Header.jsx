@@ -23,14 +23,14 @@ const theme = createTheme({
 });
 
 export default function Header({
-  isLoggedIn,
+  loggedIn,
   setTokens,
   userDetails,
 }) {
   const navigate = useNavigate();
 
   const getAccountMenu = () => {
-    if (userDetails) {
+    if (loggedIn) {
       return (
         <AccountMenu setTokens={setTokens} userDetails={userDetails} />
       );
@@ -55,7 +55,7 @@ export default function Header({
   return (
     <AppBar position="static">
       <Toolbar>
-        <AppDrawer isLoggedIn={isLoggedIn} setTokens={setTokens} />
+        <AppDrawer loggedIn={loggedIn} setTokens={setTokens} />
         <a href="/">
           <Avatar src={logo} />
         </a>
@@ -72,7 +72,7 @@ export default function Header({
 }
 
 Header.propTypes = {
-  isLoggedIn: PropTypes.bool,
+  loggedIn: PropTypes.bool,
   setTokens: PropTypes.func.isRequired,
   userDetails: PropTypes.shape({
     username: PropTypes.string,
@@ -83,6 +83,6 @@ Header.propTypes = {
 };
 
 Header.defaultProps = {
-  isLoggedIn: false,
+  loggedIn: false,
   userDetails: null,
 };

@@ -108,11 +108,6 @@ export default function EditLocationColumnsModal({
     return hasError;
   };
 
-  const sleep = (ms) => (
-    // eslint-disable-next-line no-promise-executor-return
-    new Promise((resolve) => setTimeout(resolve, ms))
-  );
-
   /**
    * Handles form submission.
    */
@@ -122,7 +117,6 @@ export default function EditLocationColumnsModal({
       return;
     }
     setSaveLoading(true);
-    await sleep(500);
     const response = await saveLocationColumn(locationColumnDetails, organization.id);
     if (response.status === 204) {
       setLocationColumns(await getOrgLocationColumns(organization.id));

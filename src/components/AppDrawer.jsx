@@ -18,7 +18,7 @@ import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-export default function AppDrawer({ isLoggedIn, setTokens }) {
+export default function AppDrawer({ loggedIn, setTokens }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -94,9 +94,9 @@ export default function AppDrawer({ isLoggedIn, setTokens }) {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      {isLoggedIn && mainDrawerListItems()}
+      {loggedIn && mainDrawerListItems()}
       <Divider />
-      {!isLoggedIn && secondaryDrawerListItems()}
+      {!loggedIn && secondaryDrawerListItems()}
     </Box>
   );
 
@@ -121,7 +121,7 @@ AppDrawer.propTypes = {
     accessToken: PropTypes.string,
     refreshToken: PropTypes.string,
   }),
-  isLoggedIn: PropTypes.bool.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
   setTokens: PropTypes.func.isRequired,
 };
 

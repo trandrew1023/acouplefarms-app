@@ -5,10 +5,8 @@ import {
 } from 'react';
 import {
   Button,
-  Card,
-  CardActions,
+  CircularProgress,
   Grid,
-  IconButton,
   Typography,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -17,13 +15,15 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useLocation } from 'react-router-dom';
 import AddLocationModal from './AddLocationModal';
 import EditLocationColumnsModal from './EditLocationColumnsModal';
+import EditLocationModal from './EditLocatonModal';
+import LocationCard from './LocationCard';
 import UserOrgAssociationModal from './UserOrgAssociationModal';
 import { getOrgLocations } from '../service';
-import EditLocationModal from './EditLocatonModal';
 
 export default function EditOrganization() {
   const { state } = useLocation();
   const [locations, setLocations] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [editLocationModalOpen, setEditLocationModalOpen] = useState(false);
   const [locationColumnModalOpen, setLocationColumnModalOpen] = useState(false);
@@ -37,10 +37,12 @@ export default function EditOrganization() {
   );
 
   useEffect(async () => {
+    setIsLoading(true);
     document.title = `Edit - ${state.organization.name} - aCOUPlefarms`;
     const locationsResponse = await getOrgLocations(state.organization.id);
     sortLocations(locationsResponse);
     setLocations(locationsResponse);
+    setIsLoading(false);
   }, []);
 
   const addNewLocation = () => (
@@ -87,6 +89,54 @@ export default function EditOrganization() {
     setSelectedLocation(location);
   };
 
+  const noLocations = () => (
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ mt: 1 }}
+    >
+      <Typography>
+        This organization has no locations. Add a location to get started.
+      </Typography>
+      {addNewLocation()}
+    </Grid>
+  );
+
+  const locationCards = () => (
+    <>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="h4">
+          Locations:
+        </Typography>
+      </Grid>
+      {locations.map((location) => (
+        <LocationCard
+          key={location.id}
+          location={location}
+          editLocation={editLocation}
+        />
+      ))}
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ mt: 2 }}
+      >
+        {addNewLocation()}
+        {editLocationColumns()}
+        {editUsers()}
+      </Grid>
+    </>
+  );
+
   return (
     <Grid
       container
@@ -94,97 +144,34 @@ export default function EditOrganization() {
       alignItems="center"
       justifyContent="center"
     >
-      <Grid item>
-        <Typography
-          variant="h3"
-          sx={{ mt: 2 }}
-        >
-          {state.organization.name}
-        </Typography>
-      </Grid>
-      <Grid
-        item
-        sx={{
-          width: window.innerWidth > 485 ? '50%' : '80%',
-          mb: 3,
-        }}
-      >
-        {(locations && locations.length > 0) ? (
-          <>
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Typography variant="h4">
-                Locations:
-              </Typography>
-            </Grid>
-            {locations.map((location) => (
-              <Card
-                key={location.id}
-                sx={{
-                  mt: 1,
-                }}
-                variant="outlined"
-                display="flex"
-              >
-                <Grid
-                  container
-                  alignItems="center"
+      {
+        isLoading ? <CircularProgress />
+          : (
+            <>
+              <Grid item>
+                <Typography
+                  variant="h3"
+                  sx={{ mt: 2 }}
                 >
-                  <Grid
-                    key={location.id}
-                    item
-                    xs={10}
-                  >
-                    <Typography
-                      variant="h5"
-                      key={location.id}
-                    >
-                      {location.name}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <CardActions>
-                      <IconButton
-                        onClick={() => editLocation(location)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </CardActions>
-                  </Grid>
-                </Grid>
-              </Card>
-            ))}
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justifyContent="center"
-              sx={{ mt: 2 }}
-            >
-              {addNewLocation()}
-              {editLocationColumns()}
-              {editUsers()}
-            </Grid>
-          </>
-        ) : (
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            sx={{ mt: 1 }}
-          >
-            <Typography>
-              This organization has no locations. Add a location to get started.
-            </Typography>
-            {addNewLocation()}
-          </Grid>
-        )}
-      </Grid>
+                  {state.organization.name}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                sx={{
+                  width: window.innerWidth > 485 ? '50%' : '80%',
+                  mb: 3,
+                }}
+              >
+                {(locations && locations.length > 0) ? (
+                  locationCards()
+                ) : (
+                  noLocations()
+                )}
+              </Grid>
+            </>
+          )
+      }
       {locationModalOpen
         && (
           <AddLocationModal

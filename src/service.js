@@ -30,7 +30,9 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
   }
   return config;
-}, (error) => Promise.reject(error));
+}, (error) => {
+  Promise.reject(error);
+});
 
 export function getUser() {
   return axiosInstance.get('user')
@@ -61,6 +63,9 @@ axiosInstance.interceptors.response.use(
           window.location.reload();
         }
       }
+    } else {
+      History.navigate('/login');
+      window.location.reload();
     }
     return Promise.reject(error);
   },
@@ -114,6 +119,24 @@ export function getUserOrganizations() {
   return axiosInstance.get('user/organizations')
     .then((response) => response)
     .catch((error) => console.log(error));
+}
+
+export function getProfileImage() {
+  return axiosInstance.get('image/profile')
+    .then((response) => response)
+    .catch((error) => error.response);
+}
+
+export function saveProfileImage(imageDetails) {
+  console.log(imageDetails.url);
+  return axiosInstance.post(
+    'image/profile',
+    {
+      url: imageDetails.url,
+    },
+  )
+    .then((response) => response)
+    .catch((error) => error.response);
 }
 
 export function saveOrganization(orgFormDetails) {

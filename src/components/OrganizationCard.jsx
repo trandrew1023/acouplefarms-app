@@ -35,7 +35,7 @@ export default function OrganizationCard({ organizationDetails }) {
               onClick={() => navigate('/locations', { state: { organizationDetails } })}
             >
               <CardContent>
-                <Typography variant="h6">
+                <Typography variant="h6" noWrap>
                   {organizationDetails.name}
                 </Typography>
               </CardContent>
