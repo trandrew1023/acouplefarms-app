@@ -119,7 +119,16 @@ export default function StatLineChart() {
       sx={{ mt: 3 }}
     >
       <Grid item xs={12}>
-        <Typography variant="h3">{state.organization.name}</Typography>
+        <Typography
+          noWrap
+          variant="h3"
+          sx={{
+            width: '90vw',
+            textAlign: 'center',
+          }}
+        >
+          {state.organization.name}
+        </Typography>
       </Grid>
       <Grid item xs={12} sx={{ mt: 3 }}>
         <BasicDateRangePicker dateRange={dateRange} setDateRange={changeDates} />
@@ -140,7 +149,15 @@ export default function StatLineChart() {
                   data={chartData}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
+                  <XAxis
+                    dataKey="date"
+                    tickFormatter={
+                      (label) => {
+                        if (label) return label.substring(5);
+                        return label;
+                      }
+                    }
+                  />
                   <YAxis domain={[0, 'dataMax']} />
                   <Tooltip />
                   <Legend />

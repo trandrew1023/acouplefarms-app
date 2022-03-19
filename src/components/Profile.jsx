@@ -27,7 +27,7 @@ export default function Profile({ profileImagesRef }) {
     } else {
       setUserDetails(null);
     }
-    if (profileImageResponse) {
+    if (profileImageResponse.status === 200 && profileImageResponse.data.url) {
       setImageURL(profileImageResponse.data.url);
     }
   }, []);
@@ -79,14 +79,11 @@ export default function Profile({ profileImagesRef }) {
                     console.log(file);
                     const newImageRef = ref(profileImagesRef, userDetails.username);
                     uploadBytes(newImageRef, file).then((response) => {
-                      console.log('Uploaded');
-                      console.log(response);
                       getDownloadURL(response.ref).then((url) => {
-                        console.log(url);
                         saveImage(url);
+                        window.location.reload();
                       });
                     });
-                    window.location.reload();
                   }
                 }}
                 sx={{

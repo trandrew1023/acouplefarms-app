@@ -33,6 +33,7 @@ export default function LocationCard({ location, editLocation }) {
           <Typography
             variant="h5"
             key={location.id}
+            noWrap
           >
             {location.name}
           </Typography>

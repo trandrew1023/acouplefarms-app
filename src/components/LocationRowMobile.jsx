@@ -36,6 +36,8 @@ export default function LocationRowMobile(props) {
       <Typography
         variant="h4"
         align="center"
+        noWrap
+        sx={{ width: '90vw' }}
       >
         {row.locationName}
       </Typography>
@@ -47,7 +49,12 @@ export default function LocationRowMobile(props) {
           justifyContent="center"
         >
           <Grid item xs={4}>
-            <Typography sx={{ fontWeight: 'bold' }}>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: 'bold',
+              }}
+            >
               {column.name}
               :
             </Typography>
