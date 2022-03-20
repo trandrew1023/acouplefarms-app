@@ -171,7 +171,9 @@ export default function EditOrganization() {
                 <Grid item>
                   <Typography
                     variant="h3"
-                    sx={{ mt: 2 }}
+                    sx={{
+                      mt: '70px',
+                    }}
                   >
                     {state.organization.name}
                   </Typography>
