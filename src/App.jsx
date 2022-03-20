@@ -1,8 +1,10 @@
 import './App.css';
-import React from 'react';
+import { React, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getStorage, ref } from 'firebase/storage';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
 import EditOrganization from './components/EditOrganization';
 import ForgotPassword from './components/ForgotPassword';
 import Header from './components/Header';
@@ -18,6 +20,7 @@ import useAuth from './tokenUtil';
 import StatLineChart from './components/StatLineChart';
 import NavigateSetter from './components/NavigateSetter';
 import RequireAuth from './RequireAuth';
+import Settings from './components/Settings';
 
 function App() {
   const { setTokens, loggedIn } = useAuth();
@@ -34,93 +37,125 @@ function App() {
   const storage = getStorage(app);
   const storageRef = ref(storage);
   const profileImagesRef = ref(storageRef, 'images/profile');
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem('dark-mode-pref') === null ? 'light' : localStorage.getItem('dark-mode-pref'),
+  );
+  const theme = createTheme({
+    palette: {
+      mode: darkMode,
+      primary: {
+        main: darkMode === 'dark' ? grey[900] : grey[200],
+      },
+      secondary: {
+        main: darkMode === 'dark' ? grey[900] : grey[200],
+      },
+    },
+  });
+
+  const toggleDarkMode = (mode) => {
+    setDarkMode(mode);
+    localStorage.setItem('dark-mode-pref', mode);
+  };
 
   return (
-    <Router>
-      <>
-        <NavigateSetter />
-        <Header
-          loggedIn={loggedIn}
-          setTokens={setTokens}
-        />
-        <Routes>
-          <Route
-            path="/login"
-            element={loggedIn ? <Organizations /> : <Login setTokens={setTokens} />}
+    <ThemeProvider theme={theme}>
+      <Router>
+        <>
+          <NavigateSetter />
+          <Header
+            loggedIn={loggedIn}
+            setTokens={setTokens}
           />
-          <Route
-            path="/register"
-            element={loggedIn ? <Organizations /> : <SignUp />}
-          />
-          <Route
-            path="/forgot-password"
-            element={loggedIn ? <Organizations /> : <ForgotPassword />}
-          />
-          <Route
-            path="/reset-password"
-            element={loggedIn ? <Organizations /> : <ResetPassword />}
-          />
-          <Route
-            path="/profile"
-            element={(
-              <RequireAuth>
-                <Profile
-                  profileImagesRef={profileImagesRef}
-                />
-              </RequireAuth>
-            )}
-          />
-          <Route
-            path="/edit-organization"
-            element={(
-              <RequireAuth>
-                <EditOrganization />
-              </RequireAuth>
-            )}
-          />
-          <Route
-            path="/new-organization"
-            element={(
-              <RequireAuth>
-                <NewOrganization />
-              </RequireAuth>
-            )}
-          />
-          <Route
-            path="/organizations"
-            element={(
-              <RequireAuth>
-                <Organizations />
-              </RequireAuth>
-            )}
-          />
-          <Route
-            path="/line-chart"
-            element={(
-              <RequireAuth>
-                <StatLineChart />
-              </RequireAuth>
-            )}
-          />
-          <Route
-            path="/locations"
-            element={(
-              <RequireAuth>
-                <Locations />
-              </RequireAuth>
-            )}
-          />
-          <Route
-            path="/"
-            element={loggedIn ? <Organizations /> : <Home />}
-          />
-          <Route
-            path="*"
-            element={<RequireAuth><Organizations /></RequireAuth>}
-          />
-        </Routes>
-      </>
-    </Router>
+          <Routes>
+            <Route
+              path="/login"
+              element={loggedIn ? <Organizations /> : <Login setTokens={setTokens} />}
+            />
+            <Route
+              path="/register"
+              element={loggedIn ? <Organizations /> : <SignUp />}
+            />
+            <Route
+              path="/forgot-password"
+              element={loggedIn ? <Organizations /> : <ForgotPassword />}
+            />
+            <Route
+              path="/reset-password"
+              element={loggedIn ? <Organizations /> : <ResetPassword />}
+            />
+            <Route
+              path="/profile"
+              element={(
+                <RequireAuth>
+                  <Profile
+                    profileImagesRef={profileImagesRef}
+                  />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/edit-organization"
+              element={(
+                <RequireAuth>
+                  <EditOrganization />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/new-organization"
+              element={(
+                <RequireAuth>
+                  <NewOrganization />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/organizations"
+              element={(
+                <RequireAuth>
+                  <Organizations />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/line-chart"
+              element={(
+                <RequireAuth>
+                  <StatLineChart />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/locations"
+              element={(
+                <RequireAuth>
+                  <Locations />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/settings"
+              element={(
+                <RequireAuth>
+                  <Settings
+                    darkMode={darkMode}
+                    setDarkMode={toggleDarkMode}
+                  />
+                </RequireAuth>
+              )}
+            />
+            <Route
+              path="/"
+              element={loggedIn ? <Organizations /> : <Home />}
+            />
+            <Route
+              path="*"
+              element={<RequireAuth><Organizations /></RequireAuth>}
+            />
+          </Routes>
+        </>
+      </Router>
+    </ThemeProvider>
   );
 }
 

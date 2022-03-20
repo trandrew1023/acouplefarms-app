@@ -4,6 +4,7 @@ import {
   useState,
 } from 'react';
 import {
+  Box,
   Button,
   CircularProgress,
   Grid,
@@ -50,7 +51,11 @@ export default function EditOrganization() {
       startIcon={<AddCircleOutlineIcon />}
       variant="contained"
       onClick={() => setLocationModalOpen(true)}
-      sx={{ width: '60%', mt: 2 }}
+      sx={{
+        width: '90%',
+        maxWidth: 500,
+        mt: 2,
+      }}
     >
       <Typography variant="button">
         Add location
@@ -63,7 +68,11 @@ export default function EditOrganization() {
       startIcon={<EditIcon />}
       variant="contained"
       onClick={() => setLocationColumnModalOpen(true)}
-      sx={{ width: '60%', mt: 2 }}
+      sx={{
+        width: '90%',
+        maxWidth: 500,
+        mt: 2,
+      }}
     >
       <Typography variant="button">
         Edit columns
@@ -76,7 +85,11 @@ export default function EditOrganization() {
       startIcon={<PersonAddIcon />}
       variant="contained"
       onClick={() => setUserOrgAssociationModalOpen(true)}
-      sx={{ width: '60%', mt: 2 }}
+      sx={{
+        width: '90%',
+        maxWidth: 500,
+        mt: 2,
+      }}
     >
       <Typography variant="button">
         Edit users
@@ -138,72 +151,87 @@ export default function EditOrganization() {
   );
 
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
+    <Box
+      sx={{
+        bgcolor: 'background.default',
+        color: 'text.primary',
+        height: '100vh',
+      }}
     >
-      {
-        isLoading ? <CircularProgress />
-          : (
-            <>
-              <Grid item>
-                <Typography
-                  variant="h3"
-                  sx={{ mt: 2 }}
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {
+          isLoading ? <CircularProgress />
+            : (
+              <>
+                <Grid item>
+                  <Typography
+                    variant="h3"
+                    sx={{ mt: 2 }}
+                  >
+                    {state.organization.name}
+                  </Typography>
+                </Grid>
+                <Grid
+                  container
+                  direction="column"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                  {state.organization.name}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                sx={{
-                  width: window.innerWidth > 485 ? '50%' : '80%',
-                  mb: 3,
-                }}
-              >
-                {(locations && locations.length > 0) ? (
-                  locationCards()
-                ) : (
-                  noLocations()
-                )}
-              </Grid>
-            </>
-          )
-      }
-      {locationModalOpen
-        && (
-          <AddLocationModal
+                  {/* <Grid
+                  item
+                  sx={{
+                    width: window.innerWidth > 485 ? '50%' : '80%',
+                    mb: 3,
+                  }}
+                > */}
+                  {(locations && locations.length > 0) ? (
+                    locationCards()
+                  ) : (
+                    noLocations()
+                  )}
+                </Grid>
+              </>
+            )
+        }
+        {locationModalOpen
+          && (
+            <AddLocationModal
+              organization={state.organization}
+              locationModalOpen
+              setLocationModalOpen={setLocationModalOpen}
+              setLocations={setLocations}
+            />
+          )}
+        {locationColumnModalOpen && (
+          <EditLocationColumnsModal
             organization={state.organization}
-            locationModalOpen
-            setLocationModalOpen={setLocationModalOpen}
-            setLocations={setLocations}
+            locationColumnModalOpen
+            setLocationColumnModalOpen={setLocationColumnModalOpen}
           />
         )}
-      {locationColumnModalOpen && (
-        <EditLocationColumnsModal
-          organization={state.organization}
-          locationColumnModalOpen
-          setLocationColumnModalOpen={setLocationColumnModalOpen}
-        />
-      )}
-      {userOrgAssociationModalOpen && (
-        <UserOrgAssociationModal
-          organization={state.organization}
-          userOrgAssociationModalOpen={userOrgAssociationModalOpen}
-          setUserOrgAssociationModalOpen={setUserOrgAssociationModalOpen}
-        />
-      )}
-      {editLocationModalOpen && (
-        <EditLocationModal
-          location={selectedLocation}
-          setLocations={setLocations}
-          organizationId={state.organization.id}
-          editLocationModalOpen={editLocationModalOpen}
-          setEditLocationModalOpen={setEditLocationModalOpen}
-        />
-      )}
-    </Grid>
+        {userOrgAssociationModalOpen && (
+          <UserOrgAssociationModal
+            organization={state.organization}
+            userOrgAssociationModalOpen={userOrgAssociationModalOpen}
+            setUserOrgAssociationModalOpen={setUserOrgAssociationModalOpen}
+          />
+        )}
+        {editLocationModalOpen && (
+          <EditLocationModal
+            location={selectedLocation}
+            setLocations={setLocations}
+            organizationId={state.organization.id}
+            editLocationModalOpen={editLocationModalOpen}
+            setEditLocationModalOpen={setEditLocationModalOpen}
+          />
+        )}
+      </Grid>
+    </Box>
   );
 }

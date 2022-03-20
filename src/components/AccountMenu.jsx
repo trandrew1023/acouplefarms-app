@@ -75,7 +75,13 @@ export default function AccountMenu({ setTokens }) {
   };
 
   const getUserIcon = () => (
-    <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+    <Box sx={{
+      ml: 'auto',
+      display: 'flex',
+      alignItems: 'center',
+      textAlign: 'center',
+    }}
+    >
       <Tooltip title="Account settings">
         <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
           {imageURL ? (
@@ -87,7 +93,7 @@ export default function AccountMenu({ setTokens }) {
             <Avatar
               sx={{ width: 40, height: 40, bgcolor: stringToColor(userDetails.username) }}
             >
-              <Typography>
+              <Typography sx={{ color: 'text.primary' }}>
                 {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
                 {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
               </Typography>
@@ -112,13 +118,21 @@ export default function AccountMenu({ setTokens }) {
             />
           ) : (
             <Avatar
-              sx={{ bgcolor: stringToColor(userDetails.username) }}
+              sx={{
+                bgcolor: stringToColor(userDetails.username),
+                color: 'text.primary',
+              }}
             >
-              {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
-              {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
+              <Typography sx={{ color: 'text.primary' }}>
+                {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
+                {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
+              </Typography>
             </Avatar>
           )}
-          <Typography variant="h5" color="black" align="center">
+          <Typography
+            variant="h5"
+            align="center"
+          >
             {userDetails.username}
           </Typography>
         </>
@@ -171,7 +185,7 @@ export default function AccountMenu({ setTokens }) {
           {getUsername()}
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={() => navigate('/settings')}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

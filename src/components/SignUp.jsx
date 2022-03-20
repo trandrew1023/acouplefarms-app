@@ -101,7 +101,6 @@ export default function SignUp() {
       return;
     }
     const response = await register(userDetails);
-    console.log(response);
     if (response.status === 204) {
       clearForm();
       setSubmitSucceeded(true);
@@ -181,7 +180,7 @@ export default function SignUp() {
   const copyright = () => (
     <Typography sx={{ mt: 6 }} variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="http://localhost:3000/">
+      <Link color="inherit" href="/">
         aCOUPlefarms
       </Link>
       {' '}

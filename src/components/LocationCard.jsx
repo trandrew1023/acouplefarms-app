@@ -17,6 +17,9 @@ export default function LocationCard({ location, editLocation }) {
       key={location.id}
       sx={{
         mt: 1,
+        width: '90%',
+        maxWidth: 500,
+        bgcolor: 'secondary.main',
       }}
       variant="outlined"
       display="flex"
@@ -34,6 +37,9 @@ export default function LocationCard({ location, editLocation }) {
             variant="h5"
             key={location.id}
             noWrap
+            sx={{
+              ml: 2,
+            }}
           >
             {location.name}
           </Typography>

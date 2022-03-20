@@ -39,7 +39,7 @@ export default function LocationTableMobile({
       {(columns && columns.length > 0)
         ? getRows()
         : (
-          <Grid item xs={12} sx={{ mt: 1, width: '90%' }}>
+          <Grid item xs={12} sx={{ mt: 1, width: '90vw' }}>
             <Typography>
               No columns defined in this organization.
               Please have an admin configure this organization.

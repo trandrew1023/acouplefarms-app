@@ -51,8 +51,6 @@ axiosInstance.interceptors.response.use(
         if (response.status === 200) {
           localStorage.setItem('tokens', JSON.stringify(response.data));
           console.log('SET NEW TOKENS');
-          const userDetails = await getUser();
-          localStorage.setItem('user', JSON.stringify(userDetails));
           error.config.headers.Authorization = headerKey + response.data.access_token;
           return axiosInstance.request(error.config);
         }

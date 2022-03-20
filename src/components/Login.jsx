@@ -43,7 +43,7 @@ export default function Login({ setTokens }) {
   const copyright = () => (
     <Typography sx={{ mt: 6 }} variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="http://localhost:3000/">
+      <Link color="inherit" href="/">
         aCOUPlefarms
       </Link>
       {' '}

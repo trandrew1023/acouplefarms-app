@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from 'react';
 import {
   Avatar,
-  Container,
+  Box,
   Grid,
   Input,
   Tooltip,
@@ -60,14 +60,26 @@ export default function Profile({ profileImagesRef }) {
 
   return (
     userDetails ? (
-      <Container maxWidth="xs" sx={{ mt: 5 }}>
+      <Box
+        sx={{
+          bgcolor: 'background.default',
+          color: 'text.primary',
+          height: '100vh',
+        }}
+      >
         <Grid
           container
           direction="column"
           alignItems="center"
           justifyContent="center"
         >
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              mt: '80px',
+            }}
+          >
             <label htmlFor="upload-button">
               <Input
                 accept="image/*"
@@ -76,7 +88,6 @@ export default function Profile({ profileImagesRef }) {
                 onChange={(event) => {
                   const file = event.target.files[0];
                   if (file) {
-                    console.log(file);
                     const newImageRef = ref(profileImagesRef, userDetails.username);
                     uploadBytes(newImageRef, file).then((response) => {
                       getDownloadURL(response.ref).then((url) => {
@@ -113,7 +124,7 @@ export default function Profile({ profileImagesRef }) {
                       },
                     }}
                   >
-                    <Typography variant="h3">
+                    <Typography variant="h3" sx={{ color: 'text.primary' }}>
                       {userDetails.firstname.charAt(0).toUpperCase()}
                       {userDetails.lastname.charAt(0).toUpperCase()}
                     </Typography>
@@ -132,7 +143,7 @@ export default function Profile({ profileImagesRef }) {
           <Typography variant="h5">Email</Typography>
           {userDetails.email}
         </Grid>
-      </Container>
+      </Box>
     ) : null
   );
 }

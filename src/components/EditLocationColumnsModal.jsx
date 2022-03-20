@@ -70,6 +70,7 @@ export default function EditLocationColumnsModal({
     width: '60%',
     maxWidth: '300px',
     bgcolor: 'background.paper',
+    color: 'text.primary',
     border: '1px solid #000',
     boxShadow: 24,
     p: 4,
@@ -293,7 +294,7 @@ export default function EditLocationColumnsModal({
         <Box component="form" sx={style}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography variant="h5">
+              <Typography variant="h5" sx={{ color: 'text.primary' }}>
                 Columns
               </Typography>
             </Grid>

@@ -118,7 +118,7 @@ export default function AddLocationModal({
       <Box component="form" sx={style}>
         <Grid container>
           <Grid item xs={12}>
-            <Typography variant="h5" sx={{ mb: 2 }}>
+            <Typography variant="h5" sx={{ color: 'text.primary', mb: 2 }}>
               Add a new location
             </Typography>
           </Grid>

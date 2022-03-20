@@ -111,70 +111,78 @@ export default function StatLineChart() {
   };
 
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      sx={{ mt: 3 }}
+    <Box
+      sx={{
+        bgcolor: 'background.default',
+        color: 'text.primary',
+        minHeight: '100vh',
+      }}
     >
-      <Grid item xs={12}>
-        <Typography
-          noWrap
-          variant="h3"
-          sx={{
-            width: '90vw',
-            textAlign: 'center',
-          }}
-        >
-          {state.organization.name}
-        </Typography>
-      </Grid>
-      <Grid item xs={12} sx={{ mt: 3 }}>
-        <BasicDateRangePicker dateRange={dateRange} setDateRange={changeDates} />
-      </Grid>
-      <Grid item xs={12}>
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          sx={{ mt: 2 }}
-        >
-          {
-            isLoading ? <CircularProgress />
-              : (
-                <LineChart
-                  width={window.innerWidth * 0.9}
-                  height={window.innerHeight * 0.4}
-                  data={chartData}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="date"
-                    tickFormatter={
-                      (label) => {
-                        if (label) return label.substring(5);
-                        return label;
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Grid item xs={12}>
+          <Typography
+            noWrap
+            variant="h3"
+            sx={{
+              mt: '70px',
+              width: '90vw',
+              textAlign: 'center',
+            }}
+          >
+            {state.organization.name}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sx={{ mt: 3 }}>
+          <BasicDateRangePicker dateRange={dateRange} setDateRange={changeDates} />
+        </Grid>
+        <Grid item xs={12}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            sx={{ mt: 2 }}
+          >
+            {
+              isLoading ? <CircularProgress />
+                : (
+                  <LineChart
+                    width={window.innerWidth * 0.9}
+                    height={window.innerHeight * 0.4}
+                    data={chartData}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="date"
+                      tickFormatter={
+                        (label) => {
+                          if (label) return label.substring(5);
+                          return label;
+                        }
                       }
-                    }
-                  />
-                  <YAxis domain={[0, 'dataMax']} />
-                  <Tooltip />
-                  <Legend />
-                  {columns && columns.map((column) => (
-                    <Line
-                      key={column.id}
-                      type="monotone"
-                      dataKey={column.id}
-                      name={column.name}
-                      stroke={stringToColor(column.name)}
                     />
-                  ))}
-                </LineChart>
-              )
-          }
-        </Box>
+                    <YAxis domain={[0, 'dataMax']} />
+                    <Tooltip />
+                    <Legend />
+                    {columns && columns.map((column) => (
+                      <Line
+                        key={column.id}
+                        type="monotone"
+                        dataKey={column.id}
+                        name={column.name}
+                        stroke={stringToColor(column.name)}
+                      />
+                    ))}
+                  </LineChart>
+                )
+            }
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </Box>
   );
 }

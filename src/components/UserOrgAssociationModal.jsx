@@ -54,6 +54,7 @@ export default function UserOrgAssociationModal({
     width: '60%',
     maxWidth: '300px',
     bgcolor: 'background.paper',
+    color: 'text.primary',
     border: '1px solid #000',
     boxShadow: 24,
     p: 4,

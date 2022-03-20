@@ -22,6 +22,9 @@ export default function OrganizationCard({ organizationDetails }) {
       <Card
         sx={{
           mt: 1,
+          width: '90%',
+          maxWidth: 500,
+          bgcolor: 'secondary.main',
         }}
         variant="outlined"
         display="flex"

@@ -51,6 +51,7 @@ export default function Locations() {
     transform: 'translate(-50%, -50%)',
     width: window.innerWidth > 485 ? '300px' : '60%',
     bgcolor: 'background.paper',
+    color: 'text.primary',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
@@ -289,29 +290,41 @@ export default function Locations() {
   );
 
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
+    <Box
       sx={{
-        mt: 5,
-        backgroundColor: 'primary',
+        bgcolor: 'background.default',
+        color: 'text.primary',
+        minHeight: '100vh',
       }}
     >
-      <Grid item xs={12} sx={{ width: '90%', textAlign: 'center' }}>
-        <Typography noWrap variant="h3">{state.organizationDetails.name}</Typography>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Grid
+          item
+          xs={12}
+          sx={{
+            width: '90%',
+            textAlign: 'center',
+            mt: '70px',
+          }}
+        >
+          <Typography noWrap variant="h3">{state.organizationDetails.name}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <BasicDatePicker date={date} changeDate={changeDate} />
+        </Grid>
+        <Grid item xs={12}>
+          {isLoading ? <CircularProgress /> : (columns && orgLocationStats && getLocationtable())}
+        </Grid>
+        <Grid item xs={12} sx={{ mt: 2 }}>
+          {formButtons()}
+        </Grid>
+        {open && cancelModal()}
       </Grid>
-      <Grid item xs={12}>
-        <BasicDatePicker date={date} changeDate={changeDate} />
-      </Grid>
-      <Grid item xs={12}>
-        {isLoading ? <CircularProgress /> : (columns && orgLocationStats && getLocationtable())}
-      </Grid>
-      <Grid item xs={12} sx={{ mt: 2 }}>
-        {formButtons()}
-      </Grid>
-      {open && cancelModal()}
-    </Grid>
+    </Box>
   );
 }

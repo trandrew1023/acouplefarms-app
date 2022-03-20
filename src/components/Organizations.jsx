@@ -4,8 +4,8 @@ import {
   useState,
 } from 'react';
 import {
+  Box,
   CircularProgress,
-  Container,
   Grid,
   Link,
   Typography,
@@ -41,26 +41,10 @@ export default function Organizations() {
   const getOrganizations = () => (
     organizations && organizations.length > 0 ? organizations.map((organization) => (
       organization.admin ? (
-        <Grid
-          alignItems="center"
-          container
-          key={organization.id}
-        >
-          <Grid item xs={12}>
-            <OrganizationCard key={organization.id} organizationDetails={organization} />
-          </Grid>
-        </Grid>
+        <OrganizationCard key={organization.id} organizationDetails={organization} />
       )
         : (
-          <Grid
-            alignItems="center"
-            container
-            key={organization.id}
-          >
-            <Grid item xs={12}>
-              <OrganizationCard key={organization.id} organizationDetails={organization} />
-            </Grid>
-          </Grid>
+          <OrganizationCard key={organization.id} organizationDetails={organization} />
         )
     ))
       : (
@@ -76,18 +60,21 @@ export default function Organizations() {
       ));
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Box
+      sx={{
+        bgcolor: 'background.default',
+        color: 'text.primary',
+        minHeight: '100vh',
+      }}
+    >
       <Grid
         container
-        direction="row"
-        sx={{
-          marginTop: 3,
-          alignItems: 'left',
-          maxWidth: 500,
-          backgroundColor: 'primary',
-        }}
+        direction="column"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
       >
-        <Grid item xs={12} sx={{ textAlign: 'center' }}>
+        <Grid item xs={12} sx={{ textAlign: 'center', mt: '70px' }}>
           <Typography variant="h4">
             Organizations
           </Typography>
@@ -100,6 +87,6 @@ export default function Organizations() {
           )}
         {isLoading ? <CircularProgress /> : getOrganizations()}
       </Grid>
-    </Container>
+    </Box>
   );
 }
