@@ -155,6 +155,7 @@ export default function AccountMenu({ setTokens }) {
           },
           elevation: 0,
           sx: {
+            bgcolor: 'secondary.menu',
             overflow: 'visible',
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1.5,

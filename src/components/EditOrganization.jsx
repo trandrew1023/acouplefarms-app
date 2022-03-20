@@ -126,7 +126,7 @@ export default function EditOrganization() {
         justifyContent="center"
       >
         <Typography variant="h4">
-          Locations:
+          Locations
         </Typography>
       </Grid>
       {locations.map((location) => (

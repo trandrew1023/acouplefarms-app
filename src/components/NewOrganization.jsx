@@ -2,6 +2,7 @@ import { React, useState, useEffect } from 'react';
 import {
   Box,
   Button,
+  Grid,
   Paper,
   Step,
   StepLabel,
@@ -104,55 +105,74 @@ export default function NewOrganization() {
         height: '100vh',
       }}
     >
-      <Paper
-        variant="outlined"
-        sx={{
-          pl: 2,
-          pr: 2,
-          height: '100vh',
-        }}
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
       >
-        <Typography
-          variant="h4"
-          align="center"
+        <Paper
           sx={{
+            pl: 2,
+            pr: 2,
+            width: '85%',
+            maxWidth: 500,
             mt: '70px',
           }}
         >
-          Create a new organization
-        </Typography>
-        <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        {activeStep === steps.length ? (
-          <Typography variant="h5" gutterBottom>
-            Organization created
+          <Typography
+            variant="h4"
+            align="center"
+          >
+            Create a new organization
           </Typography>
-        ) : (
-          <>
-            {getStepContent(activeStep)}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {activeStep !== 0 && (
-                <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                  Back
+          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          {activeStep === steps.length ? (
+            <Typography variant="h5" gutterBottom>
+              Organization created
+            </Typography>
+          ) : (
+            <>
+              {getStepContent(activeStep)}
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                {activeStep !== 0 && (
+                  <Button
+                    variant="contained"
+                    onClick={handleBack}
+                    sx={{
+                      height: 40,
+                      mt: 3,
+                      ml: 1,
+                      bgcolor: 'red',
+                    }}
+                  >
+                    Back
+                  </Button>
+                )}
+                <Button
+                  variant="contained"
+                  onClick={handleNext}
+                  sx={{
+                    height: 40,
+                    mt: 3,
+                    mb: 3,
+                    ml: 1,
+                    bgcolor: 'primary.button',
+                  }}
+                >
+                  {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
                 </Button>
-              )}
-
-              <Button
-                variant="contained"
-                onClick={handleNext}
-                sx={{ mt: 3, ml: 1 }}
-              >
-                {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
-              </Button>
-            </Box>
-          </>
-        )}
-      </Paper>
+              </Box>
+            </>
+          )}
+        </Paper>
+      </Grid>
     </Box>
   );
 }

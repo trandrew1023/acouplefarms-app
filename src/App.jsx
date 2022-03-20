@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getStorage, ref } from 'firebase/storage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
+import { blue, grey } from '@mui/material/colors';
 import EditOrganization from './components/EditOrganization';
 import ForgotPassword from './components/ForgotPassword';
 import Header from './components/Header';
@@ -44,10 +44,12 @@ function App() {
     palette: {
       mode: darkMode,
       primary: {
-        main: darkMode === 'dark' ? grey[900] : grey[200],
+        main: darkMode === 'dark' ? grey[800] : grey[300],
+        button: darkMode === 'dark' ? grey[700] : blue[700],
       },
       secondary: {
-        main: darkMode === 'dark' ? grey[900] : grey[200],
+        main: darkMode === 'dark' ? grey[800] : grey[300],
+        menu: darkMode === 'dark' ? grey[900] : grey[100],
       },
     },
   });

@@ -108,14 +108,13 @@ export default function Login({ setTokens }) {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
           <Avatar
-            sx={{ m: 1, bgcolor: 'primary' }}
+            sx={{ m: 1, bgcolor: 'primary', mt: '100px' }}
             src={logo}
             variant="rounded"
           />

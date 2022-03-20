@@ -62,8 +62,12 @@ axiosInstance.interceptors.response.use(
         }
       }
     } else {
-      History.navigate('/login');
-      window.location.reload();
+      const path = window.location.pathname;
+      const paths = ['/login', '/register', '/forgot-password', 'reset-password'];
+      if (paths.indexOf(path) === -1) {
+        History.navigate('/login');
+        window.location.reload();
+      }
     }
     return Promise.reject(error);
   },

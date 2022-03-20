@@ -27,14 +27,22 @@ export default function Header({
     }
     return (
       <Button
-        variant="outlined"
+        variant="contained"
         startIcon={
           <Avatar sx={{ width: 40, height: 40 }} />
         }
         onClick={() => navigate('/login')}
-        sx={{ ml: 'auto' }}
+        sx={{
+          ml: 'auto',
+          color: 'white',
+          bgcolor: 'primary.button',
+        }}
       >
-        <Typography variant="body2">
+        <Typography
+          variant="body2"
+          sx={{
+          }}
+        >
           Sign In
         </Typography>
       </Button>
