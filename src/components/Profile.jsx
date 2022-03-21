@@ -104,6 +104,7 @@ export default function Profile({ profileImagesRef }) {
               <Tooltip title="Change profile image" placement="top">
                 {imageURL ? (
                   <Avatar
+                    alt="Profile image"
                     src={imageURL}
                     sx={{
                       width: 100,
@@ -124,7 +125,7 @@ export default function Profile({ profileImagesRef }) {
                       },
                     }}
                   >
-                    <Typography variant="h3" sx={{ color: 'text.primary' }}>
+                    <Typography variant="h3" sx={{ color: 'white' }}>
                       {userDetails.firstname.charAt(0).toUpperCase()}
                       {userDetails.lastname.charAt(0).toUpperCase()}
                     </Typography>
@@ -139,9 +140,9 @@ export default function Profile({ profileImagesRef }) {
             {userDetails.lastname}
           </Typography>
           <Typography variant="h5" sx={{ mt: 2 }}>Username</Typography>
-          {userDetails.username}
+          <Typography variant="body">{userDetails.username}</Typography>
           <Typography variant="h5">Email</Typography>
-          {userDetails.email}
+          <Typography variant="body">{userDetails.email}</Typography>
         </Grid>
       </Box>
     ) : null

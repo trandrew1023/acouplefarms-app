@@ -4,6 +4,7 @@ import {
   Avatar,
   Button,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -56,9 +57,11 @@ export default function Header({
     >
       <Toolbar>
         <AppDrawer loggedIn={loggedIn} setTokens={setTokens} />
-        <a href="/">
-          <Avatar src={logo} />
-        </a>
+        <Tooltip title="Home">
+          <a href="/">
+            <Avatar alt="Chicken icon" src={logo} />
+          </a>
+        </Tooltip>
         {getAccountMenu()}
       </Toolbar>
     </AppBar>

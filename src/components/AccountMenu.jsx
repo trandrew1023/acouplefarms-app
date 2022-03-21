@@ -86,14 +86,19 @@ export default function AccountMenu({ setTokens }) {
         <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
           {imageURL ? (
             <Avatar
+              alt="Profile image"
               sx={{ bgcolor: 'white' }}
               src={imageURL}
             />
           ) : (
             <Avatar
-              sx={{ width: 40, height: 40, bgcolor: stringToColor(userDetails.username) }}
+              sx={{
+                width: 40,
+                height: 40,
+                bgcolor: stringToColor(userDetails.username),
+              }}
             >
-              <Typography sx={{ color: 'text.primary' }}>
+              <Typography sx={{ color: 'white' }}>
                 {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
                 {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
               </Typography>
@@ -110,6 +115,7 @@ export default function AccountMenu({ setTokens }) {
         <>
           {imageURL ? (
             <Avatar
+              alt="Profile image"
               src={imageURL}
               sx={{
                 width: 100,
@@ -123,7 +129,7 @@ export default function AccountMenu({ setTokens }) {
                 color: 'text.primary',
               }}
             >
-              <Typography sx={{ color: 'text.primary' }}>
+              <Typography sx={{ color: 'white' }}>
                 {userDetails && userDetails.firstname.charAt(0).toUpperCase()}
                 {userDetails && userDetails.lastname.charAt(0).toUpperCase()}
               </Typography>

@@ -89,6 +89,7 @@ export default function EditOrganization() {
         width: '90%',
         maxWidth: 500,
         mt: 2,
+        mb: 5,
       }}
     >
       <Typography variant="button">
@@ -155,7 +156,7 @@ export default function EditOrganization() {
       sx={{
         bgcolor: 'background.default',
         color: 'text.primary',
-        height: '100vh',
+        minHeight: '100vh',
       }}
     >
       <Grid
@@ -165,7 +166,7 @@ export default function EditOrganization() {
         justifyContent="center"
       >
         {
-          isLoading ? <CircularProgress />
+          isLoading ? <CircularProgress sx={{ color: 'primary.loading' }} />
             : (
               <>
                 <Grid item>

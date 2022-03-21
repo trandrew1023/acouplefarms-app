@@ -46,6 +46,7 @@ function App() {
       primary: {
         main: darkMode === 'dark' ? grey[800] : grey[300],
         button: darkMode === 'dark' ? grey[700] : blue[700],
+        loading: darkMode === 'dark' ? 'white' : blue[600],
       },
       secondary: {
         main: darkMode === 'dark' ? grey[800] : grey[300],

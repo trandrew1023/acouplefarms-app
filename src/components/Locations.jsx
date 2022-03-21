@@ -318,7 +318,9 @@ export default function Locations() {
           <BasicDatePicker date={date} changeDate={changeDate} />
         </Grid>
         <Grid item xs={12}>
-          {isLoading ? <CircularProgress /> : (columns && orgLocationStats && getLocationtable())}
+          {isLoading
+            ? <CircularProgress sx={{ color: 'primary.loading' }} />
+            : (columns && orgLocationStats && getLocationtable())}
         </Grid>
         <Grid item xs={12} sx={{ mt: 2 }}>
           {formButtons()}

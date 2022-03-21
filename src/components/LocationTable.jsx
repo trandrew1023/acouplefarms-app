@@ -58,7 +58,7 @@ export default function LocationTable({
             </TableBody>
           </Table>
         ) : (
-          <Typography sx={{ width: '90vw' }}>
+          <Typography textAlign="center" sx={{ width: '90vw' }}>
             No columns defined in this organization.
             Please have an admin configure this organization.
           </Typography>

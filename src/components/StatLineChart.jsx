@@ -148,7 +148,7 @@ export default function StatLineChart() {
             sx={{ mt: 2 }}
           >
             {
-              isLoading ? <CircularProgress />
+              isLoading ? <CircularProgress sx={{ color: 'primary.loading' }} />
                 : (
                   <LineChart
                     width={window.innerWidth * 0.9}

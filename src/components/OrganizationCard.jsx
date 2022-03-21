@@ -7,6 +7,7 @@ import {
   Grid,
   IconButton,
   Typography,
+  Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
@@ -44,23 +45,33 @@ export default function OrganizationCard({ organizationDetails }) {
               </CardContent>
             </CardActionArea>
           </Grid>
-          <Grid item xs={2}>
-            <CardActions>
-              <IconButton onClick={() => navigate('/line-chart', { state: { organization: organizationDetails } })}>
-                <QueryStatsIcon />
-              </IconButton>
-            </CardActions>
-          </Grid>
-          <Grid item xs={2}>
-            {organizationDetails.admin
-              && (
-                <CardActions>
-                  <IconButton onClick={() => navigate('/edit-organization', { state: { organization: organizationDetails } })}>
-                    <EditIcon />
-                  </IconButton>
-                </CardActions>
-              )}
-          </Grid>
+          <Tooltip title="View stats">
+            <Grid item xs={2}>
+              <CardActions>
+                <IconButton
+                  aria-label="View stats"
+                  onClick={() => navigate('/line-chart', { state: { organization: organizationDetails } })}
+                >
+                  <QueryStatsIcon />
+                </IconButton>
+              </CardActions>
+            </Grid>
+          </Tooltip>
+          <Tooltip title="Edit organization">
+            <Grid item xs={2}>
+              {organizationDetails.admin
+                && (
+                  <CardActions>
+                    <IconButton
+                      aria-label="Edit organization"
+                      onClick={() => navigate('/edit-organization', { state: { organization: organizationDetails } })}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </CardActions>
+                )}
+            </Grid>
+          </Tooltip>
         </Grid>
       </Card>
     )

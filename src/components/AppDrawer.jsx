@@ -8,6 +8,7 @@ import {
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import HomeIcon from '@mui/icons-material/Home';
 import ListIcon from '@mui/icons-material/List';
@@ -51,7 +52,7 @@ export default function AppDrawer({ loggedIn, setTokens }) {
       </ListItemButton>
       <ListItemButton onClick={() => navigate('/profile')}>
         <ListItemIcon>
-          <LoginIcon />
+          <AccountCircleIcon />
         </ListItemIcon>
         <ListItemText primary="Profile" />
       </ListItemButton>

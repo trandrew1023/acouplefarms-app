@@ -30,20 +30,17 @@ export default function Home() {
         container
         direction="column"
         alignItems="center"
-        sx={{
-          pl: 2,
-          pr: 2,
-        }}
+        justifyContent="center"
       >
         <Grid item xs={12}>
           <Typography
             data-aos="fade-down"
-            variant="h2"
+            variant="h3"
             sx={{
               textAlign: 'center',
               fontFamily: 'Monospace',
               fontWeight: 'bold',
-              mt: '100px',
+              mt: 12,
             }}
           >
             aCOUPlefarms
@@ -52,7 +49,7 @@ export default function Home() {
         <Grid item xs={12}>
           <Typography
             data-aos="fade-down"
-            variant="h4"
+            variant="h5"
             sx={{
               textAlign: 'center',
               fontFamily: 'Monospace',
@@ -64,7 +61,7 @@ export default function Home() {
         <Grid item xs={12}>
           <Typography
             data-aos="fade-down"
-            variant="h4"
+            variant="h5"
             gutterBottom
             sx={{
               textAlign: 'center',

@@ -102,7 +102,7 @@ export default function NewOrganization() {
       sx={{
         bgcolor: 'background.default',
         color: 'text.primary',
-        height: '100vh',
+        minHeight: '100vh',
       }}
     >
       <Grid

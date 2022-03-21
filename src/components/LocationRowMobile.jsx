@@ -65,6 +65,11 @@ export default function LocationRowMobile(props) {
               disableUnderline
               value={rowDetails.data.get(column.id.toString())}
               onChange={editRowDetails(column.id.toString())}
+              sx={{
+                bgcolor: 'primary.main',
+                borderRadius: 2,
+                mb: 1,
+              }}
             />
           </Grid>
         </Grid>

@@ -85,7 +85,7 @@ export default function Organizations() {
               Unable to retrieve organizations. Please try again later.
             </Typography>
           )}
-        {isLoading ? <CircularProgress /> : getOrganizations()}
+        {isLoading ? <CircularProgress sx={{ color: 'primary.loading' }} /> : getOrganizations()}
       </Grid>
     </Box>
   );
