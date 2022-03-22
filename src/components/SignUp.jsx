@@ -20,7 +20,6 @@ import { register } from '../service';
 import logo from '../images/hen.png';
 
 export default function SignUp() {
-  // State for registration form user details
   const [userDetails, setUserDetails] = useState({
     username: '',
     firstname: '',
@@ -28,9 +27,7 @@ export default function SignUp() {
     email: '',
     password: '',
   });
-  // State for form errors
   const [errors, setErrors] = useState(null);
-  // State for if username is already in use
   const [usernameTaken, setUsernameTaken] = useState(false);
   const [emailTaken, setEmailTaken] = useState(false);
   const [submitSucceeded, setSubmitSucceeded] = useState(false);
@@ -39,6 +36,7 @@ export default function SignUp() {
 
   useEffect(() => {
     document.title = 'Register - aCOUPlefarms';
+    window.scrollTo(0, 0);
   }, []);
 
   const clearErrors = () => {
@@ -178,7 +176,15 @@ export default function SignUp() {
    * Renders copyright for the form.
    */
   const copyright = () => (
-    <Typography sx={{ mt: 6 }} variant="body2" color="text.secondary" align="center">
+    <Typography
+      sx={{
+        mt: 6,
+        mb: 6,
+      }}
+      variant="body2"
+      color="text.secondary"
+      align="center"
+    >
       {'Copyright © '}
       <Link color="inherit" href="/">
         aCOUPlefarms

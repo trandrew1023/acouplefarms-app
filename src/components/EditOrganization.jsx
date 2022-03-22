@@ -8,7 +8,9 @@ import {
   Button,
   CircularProgress,
   Grid,
+  Tooltip,
   Typography,
+  Switch,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
@@ -40,6 +42,7 @@ export default function EditOrganization() {
   useEffect(async () => {
     setIsLoading(true);
     document.title = `Edit - ${state.organization.name} - aCOUPlefarms`;
+    window.scrollTo(0, 0);
     const locationsResponse = await getOrgLocations(state.organization.id);
     sortLocations(locationsResponse);
     setLocations(locationsResponse);
@@ -118,36 +121,45 @@ export default function EditOrganization() {
     </Grid>
   );
 
+  const flockTrackingToggle = () => (
+    <>
+      <Grid item xs={4}>
+        <Typography
+          sx={{
+            ml: 0,
+          }}
+        >
+          Flock Tracking (disabled)
+        </Typography>
+      </Grid>
+      <Tooltip title="Toggle flock tracking">
+        <Grid item xs={1}>
+          <Switch
+            checked={false}
+          />
+        </Grid>
+      </Tooltip>
+    </>
+  );
+
   const locationCards = () => (
     <>
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-      >
+      <>
         <Typography variant="h4">
           Locations
         </Typography>
-      </Grid>
-      {locations.map((location) => (
-        <LocationCard
-          key={location.id}
-          location={location}
-          editLocation={editLocation}
-        />
-      ))}
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        sx={{ mt: 2 }}
-      >
-        {addNewLocation()}
-        {editLocationColumns()}
-        {editUsers()}
-      </Grid>
+        {locations.map((location) => (
+          <LocationCard
+            key={location.id}
+            location={location}
+            editLocation={editLocation}
+          />
+        ))}
+      </>
+      {addNewLocation()}
+      {editLocationColumns()}
+      {editUsers()}
+      {flockTrackingToggle()}
     </>
   );
 
@@ -186,13 +198,6 @@ export default function EditOrganization() {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  {/* <Grid
-                  item
-                  sx={{
-                    width: window.innerWidth > 485 ? '50%' : '80%',
-                    mb: 3,
-                  }}
-                > */}
                   {(locations && locations.length > 0) ? (
                     locationCards()
                   ) : (

@@ -9,6 +9,7 @@ export default function OrganizationDetailsForm({
   setOrgFormDetails,
   errors,
   orgNameExists,
+  handleKeypress,
 }) {
   const handleFormChange = (prop) => (event) => {
     setOrgFormDetails({ ...orgFormDetails, [prop]: event.target.value });
@@ -43,6 +44,7 @@ export default function OrganizationDetailsForm({
             onChange={handleFormChange('name')}
             variant="standard"
             value={orgFormDetails.name}
+            onKeyDown={handleKeypress}
           />
         </Grid>
         <Grid item xs={12}>
@@ -53,6 +55,7 @@ export default function OrganizationDetailsForm({
             fullWidth
             onChange={handleFormChange('email')}
             variant="standard"
+            onKeyDown={handleKeypress}
           />
         </Grid>
         <Grid item xs={12}>
@@ -63,6 +66,7 @@ export default function OrganizationDetailsForm({
             fullWidth
             onChange={handleFormChange('phoneNumber')}
             variant="standard"
+            onKeyDown={handleKeypress}
           />
         </Grid>
       </Grid>
@@ -83,6 +87,7 @@ OrganizationDetailsForm.propTypes = {
     name: PropTypes.bool,
   }),
   orgNameExists: PropTypes.bool.isRequired,
+  handleKeypress: PropTypes.func.isRequired,
 };
 
 OrganizationDetailsForm.defaultProps = {

@@ -35,6 +35,9 @@ export default function LocationTableMobile({
       direction="column"
       alignItems="center"
       justifyContent="center"
+      sx={{
+        maxWidth: '100vw',
+      }}
     >
       {(columns && columns.length > 0)
         ? getRows()

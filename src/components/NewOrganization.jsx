@@ -33,6 +33,7 @@ export default function NewOrganization() {
 
   useEffect(async () => {
     document.title = 'Add New Organization - aCOUPlefarms';
+    window.scrollTo(0, 0);
     if (!orgFormDetails.user) {
       const currentUser = await getUser();
       setOrgFormDetails((orgFormDetailsState) => (
@@ -43,29 +44,6 @@ export default function NewOrganization() {
   const clearErrors = () => {
     setErrors(null);
     setOrgNameExists(false);
-  };
-
-  const getStepContent = (step) => {
-    switch (step) {
-      case 0:
-        return (
-          <OrganizationDetailsForm
-            orgFormDetails={orgFormDetails}
-            setOrgFormDetails={setOrgFormDetails}
-            errors={errors}
-            orgNameExists={orgNameExists}
-          />
-        );
-      case 1:
-        return (
-          <UserOrgAssociationForm
-            orgFormDetails={orgFormDetails}
-            setOrgFormDetails={setOrgFormDetails}
-          />
-        );
-      default:
-        throw new Error('Unknown step');
-    }
   };
 
   const handleNext = async () => {
@@ -93,8 +71,39 @@ export default function NewOrganization() {
     }
   };
 
+  const handleKeypress = (e) => {
+    if (e.which === 13) {
+      e.preventDefault();
+      handleNext();
+    }
+  };
+
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+  };
+
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <OrganizationDetailsForm
+            orgFormDetails={orgFormDetails}
+            setOrgFormDetails={setOrgFormDetails}
+            errors={errors}
+            orgNameExists={orgNameExists}
+            handleKeypress={handleKeypress}
+          />
+        );
+      case 1:
+        return (
+          <UserOrgAssociationForm
+            orgFormDetails={orgFormDetails}
+            setOrgFormDetails={setOrgFormDetails}
+          />
+        );
+      default:
+        throw new Error('Unknown step');
+    }
   };
 
   return (

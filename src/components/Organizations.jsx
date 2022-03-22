@@ -26,6 +26,7 @@ export default function Organizations() {
 
   useEffect(async () => {
     document.title = 'Organizations - aCOUPlefarms';
+    window.scrollTo(0, 0);
     setIsLoading(true);
     setHasErrors(false);
     const organizationsResponse = await getUserOrganizations();

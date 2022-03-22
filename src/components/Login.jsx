@@ -38,10 +38,19 @@ export default function Login({ setTokens }) {
 
   useEffect(() => {
     document.title = 'Login - aCOUPlefarms';
+    window.scrollTo(0, 0);
   });
 
   const copyright = () => (
-    <Typography sx={{ mt: 6 }} variant="body2" color="text.secondary" align="center">
+    <Typography
+      sx={{
+        mt: 6,
+        mb: 6,
+      }}
+      variant="body2"
+      color="text.secondary"
+      align="center"
+    >
       {'Copyright © '}
       <Link color="inherit" href="/">
         aCOUPlefarms

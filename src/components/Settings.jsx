@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -9,6 +9,11 @@ import {
 import PropTypes from 'prop-types';
 
 export default function Settings({ darkMode, setDarkMode }) {
+  useEffect(() => {
+    document.title = 'Settings - aCOUPlefarms';
+    window.scrollTo(0, 0);
+  });
+
   return (
     <Box
       sx={{

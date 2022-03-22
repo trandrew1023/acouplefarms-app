@@ -1,6 +1,5 @@
 import { React } from 'react';
 import {
-  Grid,
   Table,
   TableBody,
   TableCell,
@@ -26,44 +25,42 @@ export default function LocationTable({
 
   const getColumnHeader = (columnName) => (
     <TableCell key={columnName}>
-      <Typography variant="h5">
+      <Typography noWrap variant="h5" sx={{ maxWidth: 200 }}>
         {columnName}
       </Typography>
     </TableCell>
   );
 
   return (
-    <Grid item xs={12}>
-      {(columns && columns.length > 0)
-        ? (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>
-                  <Typography variant="h5">Location</Typography>
-                </TableCell>
-                {columns.map((column) => getColumnHeader(column.name))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows && rows.map((row, index) => (
-                <LocationRow
-                  key={row.locationStatId}
-                  columns={columns}
-                  row={Object.assign(row, { id: index })}
-                  onRowChange={onRowChange}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        ) : (
-          <Typography textAlign="center" sx={{ width: '90vw' }}>
-            No columns defined in this organization.
-            Please have an admin configure this organization.
-          </Typography>
-        )}
-    </Grid>
+    (columns && columns.length > 0)
+      ? (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>
+                <Typography variant="h5">Location</Typography>
+              </TableCell>
+              {columns.map((column) => getColumnHeader(column.name))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows && rows.map((row, index) => (
+              <LocationRow
+                key={row.locationStatId}
+                columns={columns}
+                row={Object.assign(row, { id: index })}
+                onRowChange={onRowChange}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <Typography textAlign="center" sx={{ width: '90vw' }}>
+          No columns defined in this organization.
+          Please have an admin configure this organization.
+        </Typography>
+      )
   );
 }
 

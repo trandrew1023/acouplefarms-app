@@ -41,6 +41,7 @@ export default function ResetPassword() {
 
   useEffect(async () => {
     document.title = 'Reset Password - aCOUPlefarms';
+    window.scrollTo(0, 0);
     const response = await checkResetToken(searchParams.get('token'));
     if (response.status !== 204) {
       setTokenUsed(true);

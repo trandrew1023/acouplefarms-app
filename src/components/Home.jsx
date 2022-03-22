@@ -16,6 +16,7 @@ export default function Home() {
   useEffect(() => {
     document.title = 'aCOUPlefarms';
     AOS.init();
+    window.scrollTo(0, 0);
   });
 
   return (

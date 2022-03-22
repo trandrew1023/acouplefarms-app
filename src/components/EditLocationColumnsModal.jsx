@@ -263,7 +263,7 @@ export default function EditLocationColumnsModal({
               alignItems="center"
             >
               <Grid item xs={10}>
-                <Typography>
+                <Typography noWrap sx={{ ml: 1 }}>
                   {locationColumn.name}
                 </Typography>
               </Grid>

@@ -73,6 +73,7 @@ export default function StatLineChart() {
 
   useEffect(async () => {
     document.title = `${state.organization.name} - Stats - aCOUPlefarms`;
+    window.scrollTo(0, 0);
     retrieveStats(getISODate(dateRange[0]), getISODate(dateRange[1]));
   }, []);
 
@@ -145,7 +146,11 @@ export default function StatLineChart() {
             display="flex"
             justifyContent="center"
             alignItems="center"
-            sx={{ mt: 2 }}
+            sx={{
+              ml: -3,
+              mt: 2,
+              overflow: 'hidden',
+            }}
           >
             {
               isLoading ? <CircularProgress sx={{ color: 'primary.loading' }} />

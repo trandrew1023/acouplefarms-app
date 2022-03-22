@@ -20,6 +20,7 @@ export default function Profile({ profileImagesRef }) {
   const [imageURL, setImageURL] = useState(null);
   useEffect(async () => {
     document.title = 'Profile - aCOUPlefarms';
+    window.scrollTo(0, 0);
     const userDetailsResponse = await getUser();
     const profileImageResponse = await getProfileImage();
     if (userDetailsResponse) {

@@ -100,6 +100,7 @@ export default function Locations() {
 
   useEffect(async () => {
     document.title = `${state.organizationDetails.name} - aCOUPlefarms`;
+    window.scrollTo(0, 0);
     retrieveStats(date);
   }, []);
 
